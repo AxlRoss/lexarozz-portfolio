@@ -1,0 +1,115 @@
+.project-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9; // Formato cinematográfico estándar
+  background-color: #18181b; // Zinc-900 base
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid #27272a; // Borde sutil zinc
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s;
+
+  &:hover {
+    border-color: #52525b; // Se ilumina el borde al hover
+    transform: scale(1.02); // Pequeño zoom "físico"
+    
+    .card-overlay {
+      opacity: 1;
+    }
+    
+    .card-image {
+      // Si hay video, la imagen desaparece, si no, hace un zoom sutil
+      transform: scale(1.05);
+    }
+  }
+}
+
+.card-media-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  
+  img, video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .card-image {
+    transition: opacity 0.5s ease, transform 0.7s ease;
+    z-index: 10;
+    opacity: 1;
+
+    &.hidden {
+      opacity: 0; // Se desvanece suavemente para revelar el video
+    }
+  }
+
+  .card-video {
+    z-index: 5; // Detrás de la imagen hasta que esta desaparece
+  }
+}
+
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: linear-gradient(
+    to top, 
+    rgba(0, 0, 0, 0.95) 0%, 
+    rgba(0, 0, 0, 0.6) 30%, 
+    transparent 100%
+  );
+  opacity: 0; // Invisible por defecto
+  transition: opacity 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; // Texto abajo
+  padding: 30px;
+}
+
+.card-info {
+  transform: translateY(10px);
+  transition: transform 0.4s ease;
+
+  // Al hacer hover en la tarjeta padre, el texto sube a su sitio
+  .project-card:hover & {
+    transform: translateY(0);
+  }
+
+  .card-meta {
+    color: #a1a1aa; // Zinc-400
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    // Línea decorativa
+    &::before {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 1px;
+      background-color: #00ff88; // Nuestro verde flúor característico
+    }
+  }
+
+  .card-title {
+    color: white;
+    font-size: 24px;
+    font-weight: 900; // Extra Bold
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    margin: 0;
+    line-height: 1;
+  }
+}

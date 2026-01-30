@@ -1,0 +1,373 @@
+.contact-page-container {
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+  overflow: hidden;
+}
+
+.paper-form-wrapper {
+  width: 350px; 
+  background: transparent; // 🔥 ESTA ES LA CLAVE
+  padding: 40px; // Dejamos que el tamaño lo dicte la malla 3D
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  user-select: none;
+
+  .form-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+
+    h2 {
+      font-family: var(--font-title);
+      font-size: 12px;
+      letter-spacing: 3px;
+      margin: 0;
+    }
+  }
+
+  .email-hint {
+    font-family: monospace;
+    font-size: 10px;
+    color: #373737;
+    margin-bottom: 5px;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    
+    label {
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #000000;
+    }
+
+    input, textarea {
+      background: #fafafa;
+      border: 1px solid #eee;
+      padding: 8px;
+      font-family: monospace;
+      font-size: 11px;
+      width: 100%;
+      
+      &:focus {
+        border-color: #00ff88;
+      }
+    }
+    
+    textarea {
+      height: 80px;
+    }
+  }
+
+  .send-btn {
+    margin-top: 10px;
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    font-family: var(--font-title);
+    font-size: 9px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+      background: #00ff88;
+      color: #000;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+.napkin-tooltip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  padding: 8px 16px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+
+  span {
+    color: white;
+    font-family: var(--font-title), sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-style: italic;
+  }
+
+  .green-dot {
+    width: 6px;
+    height: 6px;
+    background: #00ff88;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00ff88;
+    animation: blink 1.5s infinite;
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+// 1. Nuevo wrapper para el subtítulo con punto verde
+.subtitle-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 45px;
+
+  .status-dot-mini {
+    width: 4px;
+    height: 4px;
+    background: #00ff88;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #00ff88;
+    animation: blink 2s infinite;
+  }
+
+  .form-subtitle {
+    margin-bottom: 0; // Quitamos el margen del texto, ahora lo tiene el wrapper
+    color: #71717a;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    font-style: italic;
+  }
+}
+
+.contact-form-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  z-index: 999999;
+  padding: 20px;
+}
+
+.contact-form-card {
+  background-color: #09090b; // Zinc 950
+  border: 1px solid #27272a; // Zinc 800
+  padding: 50px 20px;
+  border-radius: 30px; // El redondeado que pediste
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 0 100px rgba(0, 0, 0, 1);
+}
+
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #52525b;
+  font-size: 24px;
+  cursor: pointer;
+  letter-spacing: 0.2em;
+  transition: color 0.3s;
+  &:hover { color: white; }
+}
+
+.form-title {
+  color: white;
+  font-weight: 900;
+  font-size: 28px;
+  letter-spacing: -0.05em;
+  font-style: italic;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.verification-box-real {
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  // Cloudflare tiene un tamaño fijo, esto asegura que quede centrado
+  width: 100%; 
+  overflow: hidden; 
+  border-radius: 10px;
+}
+
+.main-form {
+  text-align: left;
+
+  .input-group {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+
+    label {
+      color: #838394;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      margin-bottom: 12px;
+      margin-left: 15px;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      background: rgba(24, 24, 27, 0.4);
+      border: 1px solid #27272a;
+      border-radius: 20px;
+      padding: 18px 22px;
+      color: white;
+      font-size: 12px;
+      outline: none;
+      transition: border-color 0.3s;
+      width: 100%;
+
+      &:focus { border-color: #52525b; }
+      &::placeholder { color: #47474d; }
+    }
+
+    textarea { height: 130px; resize: none; }
+  }
+}
+
+.verification-box {
+  padding: 20px 0;
+  border-top: 1px solid #18181b;
+  border-bottom: 1px solid #18181b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 30px;
+
+  span {
+    color: #3f3f46;
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    font-weight: bold;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    background: #27272a;
+    border-radius: 50%;
+    animation: pulse-zinc 2s infinite;
+  }
+}
+
+.submit-button {
+  width: 100%;
+  padding: 20px;
+  border: none;
+  border-radius: 22px;
+  color: black;
+  font-weight: 900;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  
+  &:active { transform: scale(0.96); }
+}
+
+.cancel-button {
+  width: 100%;
+  background: none;
+  border: none;
+  color: #3f3f46;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-top: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.3s;
+  &:hover { color: #a1a1aa; }
+}
+
+@keyframes pulse-zinc {
+  0% { background: #27272a; }
+  50% { background: #52525b; }
+  100% { background: #27272a; }
+}
+
+/* 🔥 RESPONSIVE STYLES (MOBILE) 🔥 */
+@media (max-width: 768px) {
+  
+  // Ajuste del Popup / Overlay
+  .contact-form-overlay {
+    padding: 15px; // Menos padding en los bordes de la pantalla
+    align-items: flex-start; // Para que si es muy alto, se pueda scrollear
+    overflow-y: auto; // Habilita scroll si el teclado tapa el form
+    padding-top: 40px; // Espacio arriba
+  }
+
+  // Ajuste de la Tarjeta del Formulario
+  .contact-form-card {
+    padding: 30px 20px; // Menos relleno interno
+    border-radius: 30px; // Bordes un poco menos redondos para ganar espacio
+    max-width: 100%; // Ocupar todo el ancho disponible
+    margin-bottom: 50px; // Espacio extra abajo para scroll
+  }
+
+  // Botón de Cerrar
+  .close-button {
+    top: 20px;
+    right: 20px;
+    padding: 10px; // Área de toque más grande para dedos
+  }
+
+  // Textos
+  .form-title {
+    font-size: 22px; // Título más pequeño
+  }
+
+  .form-subtitle {
+    font-size: 8px;
+    letter-spacing: 0.15em; // Tracking un poco más cerrado
+    margin-bottom: 30px;
+  }
+
+  // Inputs
+  .main-form .input-group {
+    input, textarea {
+      padding: 15px; // Inputs más compactos
+      font-size: 14px; // IMPORTANTE: 16px o más evita que iOS haga zoom automático al escribir
+    }
+    textarea {
+      height: 100px; // Menos altura en móvil
+    }
+  }
+
+  // Cloudflare y Botones
+  .verification-box-real {
+    transform: scale(0.85); // Hacemos el captcha un poco más pequeño si no cabe
+    transform-origin: center;
+    margin-bottom: 20px;
+  }
+
+  .submit-button {
+    padding: 18px;
+    font-size: 10px;
+  }
+}

@@ -1,0 +1,303 @@
+/* =========================================
+   1. CONTENEDOR PRINCIPAL (SCROLL SNAP)
+   ================================********* */
+.design-page-snap-container {
+  height: 100vh;
+  width: 100vw;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  background-color: #000;
+  scroll-behavior: smooth;
+  scrollbar-width: none; 
+  &::-webkit-scrollbar { display: none; }
+}
+
+/* =========================================
+   2. SECCIONES GENÉRICAS
+   ================================********* */
+.snap-section {
+  height: 100vh;
+  width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  background-color: #000;
+
+  @media (max-width: 768px) {
+    height: 100svh;
+    padding: 20px;
+  }
+}
+
+/* =========================================
+   3. HERO SECTION (INTERACTIVE CANVAS)
+   ================================********* */
+.interactive-hero-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%; 
+  background-color: #000; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .vector-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: default;
+  }
+
+  .ui-overlay {
+    position: absolute;
+    inset: 0; 
+    z-index: 20;
+    top: 150px;
+    padding: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    pointer-events: none; 
+
+    .top-bar {
+      text-align: center;
+      width: 100%;
+    }
+
+    .bottom-info {
+      /* Quitamos el bg rojo */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 30px;
+    }
+
+    .tech-label {
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 0.3em;
+      color: #3f3f46;
+      text-transform: uppercase;
+    }
+
+    .manifesto-mini {
+      .main-text {
+        margin-top: -150px;
+        font-size: 13px;
+        font-weight: 900;
+        color: #00ff88;
+        letter-spacing: 0.5em;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+      }
+      .sub-text {
+        font-size: 11px;
+        color: #71717a;
+        letter-spacing: 0.1em;
+        
+        align-items: center;
+        text-align: center;
+        text-transform: uppercase;
+      }
+    }
+
+    .hint-text {
+      font-size: 12px;
+      color: #404042;
+      letter-spacing: 0.2em;
+      animation: blink 2.5s infinite;
+      text-align: center;
+    }
+    
+  }
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px; 
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  z-index: 10;
+  pointer-events: none; /* Para que no estorbe clics */
+  
+  .scroll-text {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: #fff;
+    text-transform: uppercase;
+    animation: blink 3s infinite;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: rgba(0, 255, 136, 0.2);
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #00ff88; 
+      animation: dropLine 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+    }
+  }
+}
+/* =========================================
+   4. SELECTED WORK
+   ================================********* */
+.section-header-centered {
+  text-align: center;
+  margin-bottom: 50px;
+  
+  .code { 
+    color: #52525b; 
+    font-family: monospace; 
+    font-size: 12px; 
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .title-italic { 
+    font-size: 32px; 
+    font-weight: 900; 
+    font-style: italic; 
+    text-transform: uppercase; 
+    color: white;
+  }
+}
+
+.selected-grid-fixed {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  width: 100%;
+  max-width: 1200px;
+
+  .grid-item { width: 100%; }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-height: 60vh;
+    overflow-y: auto; 
+  }
+}
+
+/* =========================================
+   5. MARQUEE SECTION
+   ================================********* */
+.brands-section {
+  .brands-text-center {
+    text-align: center;
+    max-width: 600px;
+    margin-bottom: 80px;
+    
+    .tag-green { 
+      color: #00ff88; 
+      font-size: 9px; 
+      font-weight: 900; 
+      letter-spacing: 0.5em; 
+      display: block;
+      margin-bottom: 15px;
+    }
+    
+    h3 { 
+      font-size: 24px; 
+      font-weight: 900; 
+      color: white;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+    }
+    
+    p { color: #71717a; font-size: 14px; line-height: 1.6; }
+  }
+}
+
+.marquee-wrapper-compact {
+  width: 100vw;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+
+  .marquee-move {
+    display: flex;
+    width: max-content;
+    animation: scroll-fast 30s linear infinite;
+    &:hover { animation-play-state: paused; }
+  }
+
+  .marquee-inner {
+    display: flex;
+    gap: 80px;
+    padding-right: 80px;
+    align-items: center;
+  }
+
+  .brand {
+    font-size: 60px;
+    font-weight: 900;
+    font-style: italic;
+    color: #18181b;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    cursor: default;
+    white-space: nowrap;
+    
+    &:hover { 
+      color: #00ff88; 
+      transform: scale(1.1) skewX(-10deg); 
+      opacity: 1;
+    }
+  }
+}
+
+/* =========================================
+   6. ARCHIVE SECTION
+   ================================********* */
+.archive-grid-compact {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+/* =========================================
+   7. ANIMACIONES
+   ================================********* */
+@keyframes scroll-fast {
+  to { transform: translateX(-50%); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Animación de la línea cayendo */
+@keyframes dropLine {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.blink { animation: blink 2s linear infinite; }

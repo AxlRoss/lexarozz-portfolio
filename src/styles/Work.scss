@@ -1,0 +1,223 @@
+/* --- ESTRUCTURA BASE (No tocar para que no colapse) --- */
+.work-page-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+  overflow: hidden;
+  display: flex;             /* Mantiene todo centrado */
+  justify-content: center;
+  align-items: center;
+
+  // El Canvas necesita saber que debe ocupar todo el espacio
+  .canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+  }
+
+  /* --- FONDO NEGRO Y NOISE --- */
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0.9; // Ajusta según qué tanto ruido quieras ver
+    pointer-events: none;
+    z-index: 1;
+    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+    filter: contrast(150%) brightness(6%); // Ajustado para que sea sutil
+  }
+}
+
+/* --- ETIQUETA MODERNA (CUBE LABEL) --- */
+.cube-label-v2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  pointer-events: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+
+  span {
+    font-family: var(--font-title), sans-serif;
+    font-size: 10px; 
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .green-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #00ff88;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00ff88;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%; height: 100%;
+      background: #00ff88;
+      border-radius: 50%;
+      animation: pulse-dot 1.5s infinite;
+    }
+  }
+}
+
+@keyframes pulse-dot {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+}
+
+// Animación opcional para el fondo si decides regresar el degradado sutil
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* --- CONTENEDOR MÓVIL (MAGNETIC SCROLL) --- */
+.mobile-work-wrapper {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory; // Activa el imán vertical
+  z-index: 5;
+  scrollbar-width: none; // Oculta scrollbar en Firefox
+  &::-webkit-scrollbar { display: none; } // Oculta scrollbar en Chrome/Safari
+}
+
+.mobile-section {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  scroll-snap-align: start; // Punto donde se ancla el imán
+}
+
+.video-container-mobile {
+  position: relative;
+  width: 80%; // Tamaño del "cuadrado" modular
+  aspect-ratio: 1 / 1;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: visible;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: grayscale(1); // Default B&W
+  opacity: 0.4;
+  
+  &.in-focus {
+    filter: grayscale(0); // A color cuando entra en foco
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  .mobile-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* --- ETIQUETA MÓVIL REFINADA --- */
+.mobile-label {
+  position: absolute;
+  top: 52%; // Un poco más despegada del borde superior del video
+  left: 50%;
+  // Quitamos el transform: translateX(-50%) de aquí porque ya lo hace Framer Motion
+  white-space: nowrap;
+  z-index: 10;
+}
+
+// .cube-label-v2 {
+//   display: flex;
+//   align-items: center;
+//   gap: 12px; // Más espacio entre punto y texto
+//   background: rgba(255, 255, 255, 0.05); // Un toque más visible
+//   backdrop-filter: blur(12px);
+//   -webkit-backdrop-filter: blur(12px);
+//   padding: 10px 20px; // Más grande
+//   border-radius: 6px;
+//   border: 1px solid rgba(255, 255, 255, 0.15);
+//   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+
+//   span {
+//     font-family: var(--font-title), sans-serif;
+//     font-size: 13px; // Texto más legible en móvil
+//     letter-spacing: 3px;
+//     color: #fff;
+//     text-transform: uppercase;
+//   }
+
+//   .green-dot {
+//     width: 8px; // Punto más grande
+//     height: 8px;
+//     background-color: #00ff88;
+//     border-radius: 50%;
+//     box-shadow: 0 0 12px #00ff88;
+
+//     &::after {
+//       width: 100%; height: 100%;
+//       // El pulso ahora es más notorio
+//       animation: pulse-dot 2s infinite;
+//     }
+//   }
+// }
+
+/* --- INDICADORES DE SCROLL MÓVIL --- */
+.scroll-hint {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  z-index: 20;
+  pointer-events: none; // Para que no estorbe al hacer scroll
+  
+  span {
+    font-family: var(--font-title), sans-serif;
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: rgba(255, 255, 255, 0.744);
+    font-weight: 500;
+  }
+
+  .arrow-icon {
+    font-size: 14px;
+    color: #c8c8c8; // El verde de tu interfaz
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    animation: arrowBounce 1s infinite ease-in-out;
+  }
+
+  &.up {
+    top: 20px;
+  }
+
+  &.down {
+    bottom: 20px;
+    flex-direction: column;
+  }
+}
+
+@keyframes arrowBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(5px); opacity: 1; }
+}

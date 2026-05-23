@@ -8,6 +8,8 @@ import Contact from './pages/Contact';
 import ProjectDetail from './pages/ProjectDetail';
 import Design from './pages/Design'; 
 import Animation from './pages/Animation'; 
+import AllWork from './pages/AllWork';
+import Video from './pages/Video';
 
 const AppContent = () => {
   const location = useLocation();
@@ -26,6 +28,8 @@ const AppContent = () => {
         <Route path="/work" element={<Work />} />
         <Route path="/design" element={<Design />} />
         <Route path="/animation" element={<Animation />} />
+        <Route path="/video" element={<Video />} />
+        <Route path="/all" element={<AllWork />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/project/:slug" element={<ProjectDetail />} />
       </Routes>

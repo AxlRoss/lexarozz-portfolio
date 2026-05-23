@@ -6,10 +6,11 @@ const MobileWork = () => {
   const containerRef = useRef(null);
   const [scrollPos, setScrollPos] = useState('top'); // 'top', 'middle', 'bottom'
 
+  // 🔥 AQUÍ REORGANIZAMOS LA LISTA MÓVIL
   const projects = [
-    { id: 1, label: "AN1M4TI0N", link: "/animation", video: "/mockups/video1.mp4" },
-    { id: 2, label: "D3S1GN", link: "/design", video: "/mockups/video1.mp4" },
-    { id: 3, label: "3D/2D VFX & CFX", link: "/VFX", video: "/mockups/video1.mp4" }
+    { id: 1, label: "VIDEO", link: "/video", video: "/mockups/video1.mp4" },
+    { id: 2, label: "DESIGN", link: "/design", video: "/mockups/video1.mp4" },
+    { id: 3, label: "3D ANIMATION", link: "/animation", video: "/mockups/video1.mp4" }
   ];
 
   const handleScroll = () => {

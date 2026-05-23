@@ -1,0 +1,230 @@
+/* src/styles/AllWork.scss */
+
+.all-work-page {
+  background-color: #050505;
+  min-height: 100vh;
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================
+   🔥 HEADER & PANEL DE CONTROL
+========================================== */
+.directory-header {
+  padding: 10rem 4rem 4rem 4rem; /* Padding top enorme para salvar la Navbar */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.title-wrapper {
+  margin-bottom: 3rem;
+  
+  h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    margin: 0;
+    line-height: 1;
+    letter-spacing: 2px;
+  }
+  
+  p {
+    font-family: monospace;
+    font-size: 12px;
+    color: var(--theme-color, #00ff88);
+    letter-spacing: 0.2em;
+    margin-top: 10px;
+  }
+}
+
+.control-panel {
+  display: flex;
+  flex-wrap: wrap; /* Permite que los elementos salten de línea si no caben */
+  gap: 2rem;
+  align-items: center;
+  justify-content: flex-start; /* Alinea todo ordenadamente a la izquierda */
+}
+
+/* BARRA DE BÚSQUEDA */
+.search-bar {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 10px 15px;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 400px;
+  transition: border-color 0.3s ease;
+
+  &:focus-within {
+    border-color: var(--theme-color, #00ff88);
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+  }
+
+  .prompt {
+    font-family: monospace;
+    color: var(--theme-color, #00ff88);
+    margin-right: 10px;
+  }
+
+  input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-family: monospace;
+    font-size: 14px;
+    width: 100%;
+    &::placeholder { color: rgba(255, 255, 255, 0.3); }
+  }
+
+  .clear-btn {
+    background: none; border: none; color: rgba(255, 255, 255, 0.5);
+    cursor: pointer; font-family: monospace; font-size: 12px;
+    &:hover { color: #ff3366; }
+  }
+}
+
+/* TOGGLES DE ETIQUETAS */
+/* TOGGLES DE ETIQUETAS */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap; /* Las etiquetas saltarán abajo si chocan */
+  gap: 10px;
+  flex: 1; /* Ocupa el espacio sobrante */
+  min-width: 300px; /* Evita que se aprieten demasiado antes de saltar de línea */
+}
+
+.tag-btn {
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.5);
+  font-family: monospace;
+  font-size: 12px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.1em;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.8);
+    color: #fff;
+  }
+
+  &.active {
+    background-color: var(--theme-color, #00ff88);
+    color: #000;
+    border-style: solid;
+    border-color: var(--theme-color, #00ff88);
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+  }
+}
+
+/* BOTÓN DE ORDEN */
+.sort-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto; /* Empuja este botón a la extrema derecha */
+
+  .sort-label {
+    font-family: monospace; font-size: 10px; color: rgba(255, 255, 255, 0.4);
+  }
+
+  .sort-btn {
+    background: transparent; border: none;
+    color: var(--theme-color, #00ff88);
+    font-family: monospace; font-size: 14px;
+    cursor: pointer; transition: text-shadow 0.3s ease;
+    
+    &:hover { text-shadow: 0 0 10px var(--theme-color, #00ff88); }
+  }
+}
+
+/* ==========================================
+   🔥 EL GRID DE PROYECTOS
+========================================== */
+.master-grid-container {
+  padding: 4rem;
+  flex: 1; /* Empuja el footer hacia abajo si hay pocos proyectos */
+}
+
+.loading-state, .no-results {
+  font-family: monospace;
+  color: var(--theme-color, #00ff88);
+  font-size: 14px;
+  text-align: center;
+  padding: 4rem 0;
+  
+  .blinking { animation: blink 1s step-end infinite; }
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+.master-grid {
+  display: grid;
+  /* 🔥 FIX COMPACTO: Bajamos el minmax a 240px para forzar 4 columnas en monitores estándar */
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 2rem; /* 🔥 Reducimos el espacio vacío entre proyectos */
+  width: 100%;
+}
+
+.grid-item {
+  position: relative;
+  cursor: pointer;
+  
+  .grid-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background-color: #111;
+    
+    img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: grayscale(100%); transition: filter 0.4s ease, transform 0.4s ease;
+    }
+
+    .placeholder-img {
+      width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;
+      font-family: monospace; color: rgba(255,255,255,0.2); font-size: 12px;
+    }
+    
+    .dither-mask {
+      position: absolute; inset: 0; pointer-events: none; background-color: rgba(0,0,0,0.5);
+      -webkit-mask-image: radial-gradient(circle, transparent 1px, black 1.5px);
+      mask-image: radial-gradient(circle, transparent 1px, black 1.5px);
+      -webkit-mask-size: 4px 4px; mask-size: 4px 4px; transition: opacity 0.4s ease;
+    }
+  }
+
+  .grid-info {
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding-top: 10px;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    
+    h3 { font-family: 'Anton', sans-serif; font-size: 1rem; margin: 0; line-height: 1; transition: color 0.3s ease;}
+    .grid-meta { font-family: monospace; font-size: 10px; color: #666; white-space: nowrap; }
+  }
+
+  /* Efecto Hover del Grid */
+  &:hover {
+    .grid-image-wrapper {
+      border-color: var(--theme-color, #00ff88);
+      img { filter: grayscale(0%); transform: scale(1.05); }
+      .dither-mask { opacity: 0; }
+    }
+    .grid-info h3 { color: var(--theme-color, #00ff88); }
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .directory-header { padding: 8rem 2rem 2rem 2rem; }
+  .master-grid-container { padding: 2rem; }
+  .control-panel { flex-direction: column; align-items: stretch; }
+  .search-bar { max-width: 100%; }
+}

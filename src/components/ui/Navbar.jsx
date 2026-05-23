@@ -34,8 +34,7 @@ const Navbar = () => {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
-
-  // 🔥 LA NUEVA FUNCIÓN MÁGICA DE RESETEO
+  // 🔥 LA FUNCIÓN MÁGICA DE RESETEO
   const handleResetExperience = () => {
     // 1. Borramos el registro de que ya completó la intro
     localStorage.removeItem('hasCompletedOnboarding');
@@ -47,7 +46,6 @@ const Navbar = () => {
     // 4. Si el menú móvil estaba abierto, lo cerramos
     setIsMenuOpen(false);
   };
-
 
   const overlayVariants = {
     hidden: { opacity: 0, backdropFilter: 'blur(0px)' },
@@ -90,14 +88,15 @@ const Navbar = () => {
           </div>
         </Link>
 
+        {/* 🔥 MENÚ DE ESCRITORIO */}
         <div className="nav-menus">
           <Link to="/work" className={location.pathname === '/work' ? 'active' : ''}>WORK</Link>
+          <Link to="/all" className={location.pathname === '/all' ? 'active' : ''}>ALL</Link> {/* NUEVO ENLACE */}
           <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''}>CONTACT</Link>
         </div>
 
         <div className="nav-right-section">
           
-          {/* 🔥 LE AGREGAMOS EL onClick AQUÍ (VERSIÓN ESCRITORIO) */}
           <Link to="/" className="nav-sticker-section" onClick={handleResetExperience}>
             <span className="sticker-text">Añade otro sticker</span>
             <div className="sticker-preview-box">
@@ -121,6 +120,7 @@ const Navbar = () => {
         </div>
       </nav>
 
+      {/* 🔥 MENÚ DESPLEGABLE MÓVIL */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div 
@@ -145,17 +145,17 @@ const Navbar = () => {
                 <Link to="/work" className={location.pathname === '/work' ? 'active' : ''}>WORK</Link>
               </motion.div>
               <motion.div variants={linkItemVariants}>
+                <Link to="/all" className={location.pathname === '/all' ? 'active' : ''}>ALL</Link> {/* NUEVO ENLACE MÓVIL */}
+              </motion.div>
+              <motion.div variants={linkItemVariants}>
                 <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''}>CONTACT</Link>
               </motion.div>
 
               <motion.div variants={linkItemVariants} className="mobile-sticker-link">
-                
-                {/* 🔥 Y TAMBIÉN LE AGREGAMOS EL onClick AQUÍ (VERSIÓN MÓVIL) */}
                 <Link to="/" onClick={handleResetExperience}>
                   <span>AÑADIR STICKER</span>
                   <img src={`/stickers/s${lastStickerId}.png`} alt="Sticker" />
                 </Link>
-                
               </motion.div>
             </motion.div>
           </motion.div>

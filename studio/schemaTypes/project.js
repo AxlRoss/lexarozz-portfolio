@@ -51,15 +51,19 @@ export default {
       type: 'array',
       description: 'Importante para los filtros (Animation, VFX, Design...)',
       of: [{ type: 'string' }],
+      // 🔥 AQUÍ ACTUALIZAMOS TU LISTA EXACTA DE ETIQUETAS
       options: {
         list: [
-          { title: 'Animation', value: 'Animation' },
+          { title: '3D ANIMATION', value: '3D ANIMATION' },
+          { title: '2D ANIMATION', value: '2D ANIMATION' },
           { title: 'VFX', value: 'VFX' },
-          { title: 'Design', value: 'Design' },
-          { title: 'Motion Graphics', value: 'Motion Graphics' },
-          { title: 'Direction', value: 'Direction' },
           { title: 'CFX', value: 'CFX' },
-          { title: 'Art Direction', value: 'Art Direction' },
+          { title: 'Design', value: 'Design' },
+          { title: 'Social Media', value: 'Social Media' },
+          { title: 'Motion Graphics', value: 'Motion Graphics' },
+          { title: 'Art direction', value: 'Art direction' },
+          { title: 'Director', value: 'Director' },
+          { title: 'AI prompting', value: 'AI prompting' },
         ]
       }
     },
@@ -92,7 +96,6 @@ export default {
       title: 'Contenido del Proyecto (Storytelling)',
       type: 'array',
       description: 'Aquí armas tu proyecto. Agrega bloques de texto, imágenes o videos en el orden que quieras.',
-      // Solo mostramos este campo si es "Selected Work", aunque técnicamente siempre está ahí.
       of: [
         // 1. Bloque de Texto Rico
         {
@@ -122,7 +125,6 @@ export default {
           ]
         },
         // 3. Bloque de Video (Embed de YouTube/Vimeo)
-        // Para simplificar, por ahora usaremos solo URL, luego podemos hacerlo más visual.
         {
             title: 'Video Embed (YouTube/Vimeo)',
             name: 'videoEmbed',

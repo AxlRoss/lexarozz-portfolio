@@ -1,39 +1,66 @@
-/* --- ESTRUCTURA BASE (No tocar para que no colapse) --- */
+/* src/styles/Work.scss */
+
+/* --- ESTRUCTURA BASE Y SCROLL MAGNÉTICO GLOBAL --- */
 .work-page-container {
-  position: relative;
-  width: 100vw;
+  /* 🔥 FIX: Cambiamos a absolute y le damos el control del scroll magnético */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100vh;
   background-color: #000;
-  overflow: hidden;
-  display: flex;             /* Mantiene todo centrado */
-  justify-content: center;
-  align-items: center;
+  
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
 
-  // El Canvas necesita saber que debe ocupar todo el espacio
-  .canvas-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-  }
+  /* Ocultar barra de scroll para limpieza visual */
+  &::-webkit-scrollbar { display: none; }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 
   /* --- FONDO NEGRO Y NOISE --- */
   &::after {
     content: "";
-    position: absolute;
+    /* 🔥 FIX: Fixed para que el ruido no se mueva cuando bajas al footer */
+    position: fixed; 
     top: 0; left: 0;
-    width: 100%; height: 100%;
-    opacity: 0.9; // Ajusta según qué tanto ruido quieras ver
+    width: 100vw; height: 100vh;
+    opacity: 0.9;
     pointer-events: none;
-    z-index: 1;
+    z-index: -1; /* Detrás de todo */
     background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-    filter: contrast(150%) brightness(6%); // Ajustado para que sea sutil
+    filter: contrast(150%) brightness(6%);
   }
 }
 
-/* --- ETIQUETA MODERNA (CUBE LABEL) --- */
+/* --- SECCIONES MAGNÉTICAS --- */
+.snap-section {
+  width: 100%;
+  height: 100vh;
+  scroll-snap-align: start;
+  position: relative;
+}
+
+/* Contenedor específico para mantener los cubos o el móvil centrados */
+.work-hero-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; 
+}
+
+/* El Canvas 3D ocupa solo su pantalla hero */
+.canvas-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+
+/* --- ETIQUETA MODERNA (CUBE LABEL 3D) --- */
 .cube-label-v2 {
   display: flex;
   align-items: center;
@@ -83,24 +110,24 @@
   100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
 }
 
-// Animación opcional para el fondo si decides regresar el degradado sutil
 @keyframes gradientMove {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* --- CONTENEDOR MÓVIL (MAGNETIC SCROLL) --- */
+/* --- CONTENEDOR MÓVIL (MAGNETIC SCROLL INTERNO) --- */
 .mobile-work-wrapper {
-  position: fixed;
-  top: 0; left: 0;
+  /* 🔥 FIX: Cambiamos de fixed a absolute para que viva DENTRO de su sección hero */
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100vh;
   overflow-y: scroll;
-  scroll-snap-type: y mandatory; // Activa el imán vertical
+  scroll-snap-type: y mandatory; 
   z-index: 5;
-  scrollbar-width: none; // Oculta scrollbar en Firefox
-  &::-webkit-scrollbar { display: none; } // Oculta scrollbar en Chrome/Safari
+  scrollbar-width: none; 
+  &::-webkit-scrollbar { display: none; } 
 }
 
 .mobile-section {
@@ -109,21 +136,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  scroll-snap-align: start; // Punto donde se ancla el imán
+  scroll-snap-align: start; 
 }
 
 .video-container-mobile {
   position: relative;
-  width: 80%; // Tamaño del "cuadrado" modular
+  width: 80%; 
   aspect-ratio: 1 / 1;
   border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: visible;
   transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-  filter: grayscale(1); // Default B&W
+  filter: grayscale(1); 
   opacity: 0.4;
   
   &.in-focus {
-    filter: grayscale(0); // A color cuando entra en foco
+    filter: grayscale(0); 
     opacity: 1;
     transform: scale(1.05);
   }
@@ -138,47 +165,11 @@
 /* --- ETIQUETA MÓVIL REFINADA --- */
 .mobile-label {
   position: absolute;
-  top: 52%; // Un poco más despegada del borde superior del video
+  top: 52%; 
   left: 50%;
-  // Quitamos el transform: translateX(-50%) de aquí porque ya lo hace Framer Motion
   white-space: nowrap;
   z-index: 10;
 }
-
-// .cube-label-v2 {
-//   display: flex;
-//   align-items: center;
-//   gap: 12px; // Más espacio entre punto y texto
-//   background: rgba(255, 255, 255, 0.05); // Un toque más visible
-//   backdrop-filter: blur(12px);
-//   -webkit-backdrop-filter: blur(12px);
-//   padding: 10px 20px; // Más grande
-//   border-radius: 6px;
-//   border: 1px solid rgba(255, 255, 255, 0.15);
-//   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-
-//   span {
-//     font-family: var(--font-title), sans-serif;
-//     font-size: 13px; // Texto más legible en móvil
-//     letter-spacing: 3px;
-//     color: #fff;
-//     text-transform: uppercase;
-//   }
-
-//   .green-dot {
-//     width: 8px; // Punto más grande
-//     height: 8px;
-//     background-color: #00ff88;
-//     border-radius: 50%;
-//     box-shadow: 0 0 12px #00ff88;
-
-//     &::after {
-//       width: 100%; height: 100%;
-//       // El pulso ahora es más notorio
-//       animation: pulse-dot 2s infinite;
-//     }
-//   }
-// }
 
 /* --- INDICADORES DE SCROLL MÓVIL --- */
 .scroll-hint {
@@ -190,7 +181,7 @@
   align-items: center;
   gap: 5px;
   z-index: 20;
-  pointer-events: none; // Para que no estorbe al hacer scroll
+  pointer-events: none; 
   
   span {
     font-family: var(--font-title), sans-serif;
@@ -202,7 +193,7 @@
 
   .arrow-icon {
     font-size: 14px;
-    color: #c8c8c8; // El verde de tu interfaz
+    color: #c8c8c8; 
     text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
     animation: arrowBounce 1s infinite ease-in-out;
   }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
-import '../styles/Home.scss'; 
+import '../styles/home.scss'; 
 
 // ========================================================
 // 🔥 1. PREPARACIÓN DE CURSORES NATIVOS (Cero lag)

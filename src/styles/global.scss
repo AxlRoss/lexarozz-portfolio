@@ -1,5 +1,41 @@
 /* src/styles/global.scss */
 
+/* 1. MILANESA SERIF - REGULAR (Para textos normales) */
+@font-face {
+  font-family: 'Milanesa Serif';
+  src: url('/fonts/MilanesaSerif-Regular.otf') format('opentype');
+  font-weight: normal; /* equivalente a 400 */
+  font-style: normal;
+  font-display: swap; 
+}
+
+/* 2. MILANESA SERIF - BOLD (La que hace que "AXL ROZZ" se vea gordito y genial) */
+@font-face {
+  font-family: 'Milanesa Serif';
+  src: url('/fonts/MilanesaSerif-Bold.otf') format('opentype');
+  font-weight: bold; /* equivalente a 700 */
+  font-style: normal;
+  font-display: swap; 
+}
+
+/* 3. MILANESA SERIF - BLACK (Opcional: Por si algún día quieres algo EXTREMADAMENTE grueso) */
+@font-face {
+  font-family: 'Milanesa Serif';
+  src: url('/fonts/MilanesaSerif-Black.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap; 
+}
+
+/* 4. MILANESA SERIF - THIN (Opcional: Por si algún día quieres algo súper delgadito) */
+@font-face {
+  font-family: 'Milanesa Serif';
+  src: url('/fonts/MilanesaSerif-Thin.otf') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap; 
+}
+
 :root {
   --bg-color: #000000;      /* Negro TOTAL como pediste */
   --text-main: #ffffff;     /* Blanco puro */

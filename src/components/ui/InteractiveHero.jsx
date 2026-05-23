@@ -39,21 +39,28 @@ const InteractiveHero = ({ scrollProgress = 0 }) => {
     `);
 
     const CURSOR_HOVER = svgToUrl(`
-      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="34" viewBox="0 0 502.89 541.68">
-        <defs><style>.cls-1 { fill: none; stroke: #fff; stroke-linecap: round; stroke-linejoin: round; stroke-width: 30px; }</style></defs>
-        <path class="cls-1" d="M489.35,223.83L34.6,2.43C26.29-1.62,16.39-.55,9.14,5.19,1.89,10.93-1.44,20.31.58,29.33l110.6,493.54c2.29,10.22,10.92,17.78,21.36,18.71.72.06,1.43.09,2.14.09,9.62,0,18.4-5.76,22.18-14.75l91.87-218.75,234.04-38.97c10.33-1.72,18.36-9.92,19.87-20.29,1.5-10.36-3.87-20.51-13.28-25.09Z"/>
-        <line class="cls-1" x1="293.34" y1="360.27" x2="478.11" y2="360.27"/>
-        <line class="cls-1" x1="293.34" y1="423.4" x2="478.11" y2="423.4"/>
-        <line class="cls-1" x1="293.34" y1="486.52" x2="478.11" y2="486.52"/>
-      </svg>
-    `);
+  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="34" viewBox="0 0 502.89 541.68">
+    <defs>
+      <style>
+        /* Separamos el estilo de la flecha y de las rayitas */
+        .arrow-path { fill: #000; stroke: #fff; stroke-width: 20px; stroke-linejoin: round; }
+        .action-lines { fill: none; stroke: #fff; stroke-linecap: round; stroke-width: 30px; }
+      </style>
+    </defs>
+    
+    <path class="arrow-path" d="M489.35,223.83L34.6,2.43C26.29-1.62,16.39-.55,9.14,5.19,1.89,10.93-1.44,20.31.58,29.33l110.6,493.54c2.29,10.22,10.92,17.78,21.36,18.71.72.06,1.43.09,2.14.09,9.62,0,18.4-5.76,22.18-14.75l91.87-218.75,234.04-38.97c10.33-1.72,18.36-9.92,19.87-20.29,1.5-10.36-3.87-20.51-13.28-25.09Z"/>
+    
+    <line class="action-lines" x1="293.34" y1="360.27" x2="478.11" y2="360.27"/>
+    <line class="action-lines" x1="293.34" y1="423.4" x2="478.11" y2="423.4"/>
+    <line class="action-lines" x1="293.34" y1="486.52" x2="478.11" y2="486.52"/>
+  </svg>
+`);
 
     const CURSOR_DRAG = svgToUrl(`
       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 502.89 541.68">
-        <defs><style>.cls-1 { fill: #fff; }</style></defs>
-        <path class="cls-1" d="M489.35,223.83L34.6,2.43C26.29-1.62,16.39-.55,9.14,5.19,1.89,10.93-1.44,20.31.58,29.33l110.6,493.54c2.29,10.22,10.92,17.78,21.36,18.71.72.06,1.43.09,2.14.09,9.62,0,18.4-5.76,22.18-14.75l91.87-218.75,234.04-38.97c10.33-1.72,18.36-9.92,19.87-20.29,1.5-10.36-3.87-20.51-13.28-25.09Z"/>
-      </svg>
-    `);
+    <path fill="#fff" stroke="#000" stroke-width="20" d="M489.35,223.83L34.6,2.43C26.29-1.62,16.39-.55,9.14,5.19,1.89,10.93-1.44,20.31.58,29.33l110.6,493.54c2.29,10.22,10.92,17.78,21.36,18.71.72.06,1.43.09,2.14.09,9.62,0,18.4-5.76,22.18-14.75l91.87-218.75,234.04-38.97c10.33-1.72,18.36-9.92,19.87-20.29,1.5-10.36-3.87-20.51-13.28-25.09Z"/>
+  </svg>
+`);
 
     // --- DELAY DE SEGURIDAD ---
     const timer = setTimeout(() => {

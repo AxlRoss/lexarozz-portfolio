@@ -1,110 +1,119 @@
-import React, { useRef, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { Html } from '@react-three/drei';
-import { motion } from 'framer-motion-3d';
+import React, { useState, useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Environment, ContactShadows, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
+import HardDrive from './HardDrive'; 
 
-const ContactPaper = ({ onSuccess }) => {
-  const groupRef = useRef();
-  const [formStatus, setFormStatus] = useState('idle');
+const CameraController = ({ targetPosition, isLocked, hoverPointRef }) => {
+  const controlsRef = useRef();
+  
+  // Vector temporal para no crear basura en memoria cada frame
+  const vec = new THREE.Vector3();
 
-  // Parallax suave con el mouse
-  useFrame((state) => {
-    if (groupRef.current) {
-      // Movimiento muy sutil para no marear
-      const x = (state.mouse.x * 0.2);
-      const y = (state.mouse.y * 0.2);
-      groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, x, 0.05);
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, -y, 0.05);
+  useFrame((state, delta) => {
+    if (!controlsRef.current) return;
+    const controls = controlsRef.current;
+
+    // --- CASO 1: FASE BLOQUEADA (ROTANDO/PEGANDO) ---
+    // La cámara obedece ciegamente al punto de anclaje
+    if (isLocked) {
+      controls.target.lerp(targetPosition, 5 * delta);
+      controls.update();
+      return;
     }
+
+    // --- CASO 2: FASE EXPLORACIÓN (ZOOM INTELIGENTE) ---
+    // Distancia actual de la cámara al objetivo actual
+    const distance = state.camera.position.distanceTo(controls.target);
+    
+    // UMBRAL DE ZOOM: ¿Qué tan cerca consideramos "Zoom In"?
+    // El disco está en 0,0,0. La cámara empieza en z=5.
+    // Digamos que si estás a menos de 4 unidades, ya estás "viendo detalles".
+    const ZOOM_THRESHOLD = 4.5; 
+
+    if (distance < ZOOM_THRESHOLD) {
+        // ZONA DE DETALLE:
+        // Si el mouse está sobre el mesh (tenemos un punto válido), vamos hacia allá.
+        // Si no (mouse en el vacío), nos quedamos donde estábamos (o vamos al último punto válido).
+        if (hoverPointRef.current) {
+            // Lerp suave hacia el punto del mouse
+            controls.target.lerp(hoverPointRef.current, 5 * delta);
+        }
+    } else {
+        // ZONA GENERAL (ZOOM OUT):
+        // Si nos alejamos, regresamos suavemente al centro absoluto (0,0,0)
+        vec.set(0, 0, 0);
+        controls.target.lerp(vec, 5 * delta);
+    }
+    
+    controls.update();
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setFormStatus('sending');
-    setTimeout(() => {
-      onSuccess();
-    }, 1000);
-  };
-
   return (
-    <motion.group
-      ref={groupRef}
-      // --- ANIMACIÓN DE ENTRADA TIPO RULETA/FLOTANTE ---
-      initial={{ 
-        y: 5,           // Empieza arriba
-        z: -5,          // Empieza al fondo
-        rotateX: 2,     // Rotación inicial loca
-        rotateZ: 1, 
-        scale: 0        // Empieza invisible
-      }} 
-      animate={{ 
-        y: 0, 
-        z: 0, 
-        rotateX: 0, 
-        rotateZ: 0, 
-        scale: 1 
-      }}
-      exit={{ 
-        y: -10,         // Se va hacia abajo al enviar
-        rotateX: -1,
-        transition: { duration: 0.8, ease: "easeIn" }
-      }}
-      transition={{ 
-        duration: 2, 
-        ease: [0.16, 1, 0.3, 1],
-        scale: { duration: 1.2 }
-      }}
-    >
-      {/* REDUCCIÓN DE ESCALA: 
-          Reducimos el plano a 3x4 aprox para que no ocupe toda la pantalla 
-      */}
-      <mesh castShadow>
-        <planeGeometry args={[3.2, 4.5]} />
-        <meshStandardMaterial 
-          color="#ffffff" 
-          roughness={0.1} 
-          metalness={0.1}
-          side={THREE.DoubleSide} // Para que se vea por detrás si gira mucho
-        />
-      </mesh>
-
-      {/* AJUSTE HTML:
-          Bajamos el distanceFactor para que el contenido se ajuste al plano pequeño
-      */}
-      <Html
-        transform
-        distanceFactor={4} // Antes era 10, bajarlo lo hace "más pequeño" en el mundo 3D
-        position={[0, 0, 0.02]}
-        occlude // Esto permite que si algo pasa frente a la hoja, la oculte
-      >
-        <div className="paper-form-wrapper">
-          <div className="form-header">
-            <div className="green-dot" />
-            <h2>CONTACTO</h2>
-          </div>
-          
-          <p className="email-hint">contacto@lexarozz.com</p>
-          
-          <form onSubmit={handleSubmit}>
-            <div className="field-group">
-              <label>Identidad (Email)</label>
-              <input type="email" required placeholder="tu@correo.com" />
-            </div>
-
-            <div className="field-group">
-              <label>Mensaje</label>
-              <textarea required placeholder="¿En qué puedo ayudarte?" />
-            </div>
-
-            <button type="submit" className="send-btn" disabled={formStatus === 'sending'}>
-              {formStatus === 'sending' ? 'TRANSMITIENDO...' : 'ENVIAR DATOS'}
-            </button>
-          </form>
-        </div>
-      </Html>
-    </motion.group>
+    <OrbitControls 
+      ref={controlsRef}
+      makeDefault 
+      enableDamping={true} 
+      dampingFactor={0.05} 
+      minDistance={2.0} 
+      maxDistance={10}  
+      enablePan={false}
+      enableZoom={true} 
+      enableRotate={!isLocked}
+      
+      // 🔥 CLAVE: Desactivamos zoomToCursor nativo para controlarlo nosotros
+      zoomToCursor={false} 
+    />
   );
 };
 
-export default ContactPaper;
+const Experience = ({ selectedStickerId, stickerPhase, setStickerPhase, pasteProgress, onStickerFixed, onDeselect }) => {
+
+  const [cameraFocusPoint, setCameraFocusPoint] = useState(new THREE.Vector3(0, 0, 0));
+  
+  // Ref para guardar la última posición conocida del mouse sobre el mesh
+  const hoverPointRef = useRef(null);
+
+  // Función para actualizar la ref desde HardDrive
+  const handleHoverPointUpdate = (point) => {
+      hoverPointRef.current = point;
+  };
+
+  const isCameraLocked = stickerPhase === 'rotating' || stickerPhase === 'pasting';
+
+  return (
+    <Canvas
+      shadows
+      dpr={[1, 2]} 
+      camera={{ position: [0, 0, 5], fov: 45 }} 
+      style={{ height: '100vh', width: '100vw', background: 'transparent' }}
+    >
+      <ambientLight intensity={1.5} color="#ffffff" />
+      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={2} castShadow />
+      <pointLight position={[-10, -10, -10]} intensity={1} color="#eefeff" />
+
+      <Environment preset="city" blur={0.8} />
+
+      <CameraController 
+        targetPosition={cameraFocusPoint} 
+        isLocked={isCameraLocked}
+        hoverPointRef={hoverPointRef} // Pasamos la ref para leerla
+      />
+
+      <HardDrive 
+        selectedStickerId={selectedStickerId} 
+        phase={stickerPhase}
+        setPhase={setStickerPhase}
+        pasteProgress={pasteProgress}
+        onStickerFixed={onStickerFixed}
+        onDeselect={onDeselect}
+        setCameraFocusPoint={setCameraFocusPoint}
+        setHoverPointWorld={handleHoverPointUpdate} // Pasamos la función para escribirla
+      />
+
+      <ContactShadows position={[0, -1.5, 0]} opacity={0.6} scale={10} blur={2} far={4} />
+    </Canvas>
+  );
+};
+
+export default Experience;

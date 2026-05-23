@@ -131,6 +131,7 @@ const InteractiveCube = ({ position, texturePath, label, link, scale = 1, index 
         onPointerOver={() => setHovered(true)}
         onPointerOut={() => setHovered(false)}
         onClick={() => navigate(link)}
+        className="clickable"
       >
         <boxGeometry args={[1.4, 1.4, 1.4]} />
         <Suspense fallback={<meshStandardMaterial color="#050505" />}>

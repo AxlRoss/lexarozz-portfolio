@@ -1,0 +1,246 @@
+/* src/styles/Animation.scss */
+
+.animation-page-container {
+  /* 🔥 FIX NAVBAR: Posición absoluta al top 0. Pasa por debajo del navbar global */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: #000;
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  
+  /* 🔥 SCROLL MAGNÉTICO NATIVO Y FLUIDO */
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  
+  /* Ocultar barra de scroll para estética limpia */
+  &::-webkit-scrollbar { display: none; }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Cada sección ocupa exactamente el 100% de la pantalla y hace el "imán" */
+.snap-section {
+  width: 100%;
+  height: 100vh;
+  scroll-snap-align: start;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ==========================================
+   🔥 SECCIÓN 1: HERO
+========================================== */
+.video-background-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  .fullscreen-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(1.2);
+  }
+}
+
+.video-overlay-dither {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-color: rgba(0, 0, 0, 0.4);
+  -webkit-mask-image: radial-gradient(circle, transparent 1px, black 1.5px);
+  mask-image: radial-gradient(circle, transparent 1px, black 1.5px);
+  -webkit-mask-size: 4px 4px;
+  mask-size: 4px 4px;
+}
+
+.video-overlay-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.8) 100%);
+}
+
+.ui-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  padding: 4rem 4rem 4rem 4rem; /* 🔥 Padding top alto para no chocar con el Navbar global */
+}
+
+/* Textos y Lista del Hero */
+.animation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: monospace;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+
+  .back-btn {
+    background: none; border: none; color: #fff; font-family: monospace;
+    cursor: pointer; transition: color 0.3s ease;
+    &:hover { color: var(--theme-color, #00ff88); }
+  }
+}
+
+.projects-list-container {
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
+}
+
+.projects-list {
+
+  list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2rem;
+}
+
+.project-item {
+  display: flex; align-items: flex-start; gap: 20px; cursor: pointer; opacity: 0.5;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+
+  .project-index {
+    font-family: monospace; font-size: 1rem; margin-top: 1.5rem; color: rgba(255,255,255,0.5); }
+  
+  .project-title {
+    font-family: 'Anton', sans-serif; 
+    font-size: clamp(4rem, 8vw, 8rem); 
+    margin: 0; 
+    line-height: 0.9;
+    color: transparent; 
+    
+    /* 🔥 FIX STROKE DELGADO: Mantenemos 1px pero con opacidad al 15% para que luzca súper fino */
+    -webkit-text-stroke: 0.02px rgba(255, 255, 255, 0.8); 
+    transition: all 0.3s ease;
+  }
+
+  &:hover, &.active {
+    opacity: 1; transform: translateX(20px);
+    .project-index { color: var(--theme-color, #00ff88); }
+    .project-title {
+      color: var(--theme-color, #00ff88); 
+      
+      /* Al estar activo, el stroke también se vuelve verde */
+      -webkit-text-stroke: 1px var(--theme-color, #00ff88);
+      text-shadow: 0 0 40px rgba(0, 255, 136, 0.4);
+    }
+  }
+}
+
+.project-details-terminal {
+  position: absolute; bottom: 4rem; right: 4rem; font-family: monospace; font-size: 12px;
+  color: #00ff88; text-align: right;
+  .blinking-cursor { animation: blink 1s step-end infinite; }
+}
+
+.scroll-indicator {
+  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+  font-family: monospace; font-size: 10px; color: rgba(255,255,255,0.5);
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  animation: float 2s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 10px); }
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* ==========================================
+   🔥 SECCIÓN 2: ARCHIVO (GRID)
+========================================== */
+.archive-section {
+  background-color: #050505; /* Un negro casi puro pero distinto al hero */
+  padding: 8rem 4rem 4rem 4rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.archive-header {
+  margin-bottom: 4rem;
+  
+  /* 🔥 FIX CENTRADO: Alineamos todo el bloque al centro */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  
+  h2 { 
+    /* 🔥 FIX TIPOGRAFÍA: Usamos tu fuente principal */
+    font-family: 'Milanesa Serif', serif; 
+    font-size: 3.5rem; 
+    font-weight: 900;
+    margin: 0; 
+    letter-spacing: 0px; 
+  }
+  
+  p { 
+    font-family: monospace; 
+    color: #888; 
+    font-size: 12px; 
+    margin-top: 15px; /* Un poco más de espacio debajo del título */
+    letter-spacing: 0.2em; 
+  }
+}
+
+.brutalist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  width: 100%;
+}
+
+.grid-item {
+  position: relative;
+  cursor: pointer;
+  group: hover; /* Para Tailwind/CSS effects */
+  
+  .grid-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+    
+    img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: grayscale(100%);
+      transition: filter 0.4s ease, transform 0.4s ease;
+    }
+    
+    .dither-mask {
+      position: absolute; inset: 0; pointer-events: none;
+      background-color: rgba(0,0,0,0.5);
+      -webkit-mask-image: radial-gradient(circle, transparent 1px, black 1.5px);
+      mask-image: radial-gradient(circle, transparent 1px, black 1.5px);
+      -webkit-mask-size: 4px 4px; mask-size: 4px 4px;
+      transition: opacity 0.4s ease;
+    }
+  }
+
+  .grid-info {
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding-top: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+    
+    h3 { font-family: 'Anton', sans-serif; font-size: 1.5rem; margin: 0; transition: color 0.3s ease;}
+    .grid-meta { font-family: monospace; font-size: 10px; color: #666; }
+  }
+
+  /* Efecto Hover del Grid */
+  &:hover {
+    .grid-image-wrapper {
+      border-color: var(--theme-color, #00ff88);
+      img { filter: grayscale(0%); transform: scale(1.05); }
+      .dither-mask { opacity: 0; /* Revela la imagen limpia */ }
+    }
+    .grid-info h3 { color: var(--theme-color, #00ff88); }
+  }
+}

@@ -1,516 +1,281 @@
 /* src/styles/Home.scss */
 
-.home-container {
+/* Asegúrate de tener importada tu tipografía en tu global.scss o index.html */
+/* @font-face { font-family: 'Milanesa Serif'; src: url('ruta-a-tu-fuente'); font-weight: bold; } */
+
+.new-home-container {
+  min-height: 100vh;
   width: 100vw;
-  height: 100vh;
-  position: relative;
+  background-color: #000000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--bg-color); /* Negro */
-}
-
-/* --- SECCIÓN INTRO --- */
-.intro-content {
-  text-align: center;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem; /* Espacio entre elementos */
-
-  .greeting-row {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    
-    /* El círculo del avatar */
-    .avatar-circle {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-
-    h2 {
-      font-family: var(--font-body); /* Inter */
-      font-weight: 300;
-      font-size: 1.2rem;
-      color: var(--text-dim);
-    }
-  }
-
-  h1.big-cta {
-    font-family: var(--font-title); /* Space Grotesk */
-    font-size: 4rem; /* Texto GIGANTE */
-    font-weight: 700;
-    color: var(--text-main);
-    letter-spacing: -2px;
-    margin-bottom: 1rem;
-    
-    @media (max-width: 768px) {
-      font-size: 2.5rem; /* Ajuste para celular */
-    }
-  }
-
-  /* --- EL BOTÓN MÁGICO --- */
-  .magic-button {
-    background: #111;
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 18px 40px;
-    border-radius: 50px; /* Redondo como pediste */
-    font-size: 1rem;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.5s ease;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
-
-    &:hover {
-      background: #000;
-      border-color: rgba(255, 255, 255, 0.5);
-      box-shadow: 
-        0 0 20px rgba(255, 255, 255, 0.2),
-        0 0 40px rgba(255, 255, 255, 0.1); /* Doble glow */
-      transform: scale(1.05); /* Crece un poquito */
-    }
-
-    /* Animación de "Destellos" sutiles (Sparkles) */
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(
-        90deg, 
-        transparent, 
-        rgba(255, 255, 255, 0.2), 
-        transparent
-      );
-      transition: 0.5s;
-    }
-
-    &:hover::before {
-      left: 100%;
-      transition: 0.7s;
-    }
-  }
-}
-
-/* --- STICKER MENU UI --- */
-.sticker-ui-container { 
-  position: absolute;
-  bottom: 10px; /* Pegado abajo */
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 20; /* UI Interactiva hasta arriba */
-  
-  /* Estilos visuales del contenedor del slider */
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  align-items: center;
-  padding: 10px 20px;
-  background: rgba(0,0,0,0.3);
-  backdrop-filter: blur(5px);
-  border-radius: 40px;
-  border: 1px solid rgba(255,255,255,0.1);
-
-
-  h3 {
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    color: var(--text-dim);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    background: rgba(0,0,0,0.6);
-    padding: 5px 40px;
-    border-radius: 20px;
-    backdrop-filter: blur(5px);
-  }
-
-  .sticker-bar {
-    display: flex;
-    background: rgba(20, 20, 20, 0.8);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 10px;
-    border-radius: 20px;
-    gap: 10px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-
-    .sticker-btn {
-      width: 50px;
-      height: 50px;
-      border-radius: 12px;
-      border: 2px solid transparent;
-      background: rgba(255,255,255,0.05);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      img {
-        width: 80%;
-        height: 80%;
-        object-fit: contain;
-        pointer-events: none;
-      }
-
-      &:hover {
-        background: rgba(255,255,255,0.15);
-        transform: translateY(-3px);
-      }
-
-      &.selected {
-        border-color: var(--text-main);
-        background: rgba(255,255,255,0.2);
-        box-shadow: 0 0 15px rgba(255,255,255,0.1);
-      }
-    }
-  }
-}
-
-/* --- TOOLTIP MINIMALISTA (ESTILO IDÉNTICO AL UI) --- */
-.floating-help-label {
-  pointer-events: none;
-  font-family: var(--font-body), sans-serif; /* Tu fuente principal */
-  font-size: 0.75rem; /* Pequeño y elegante */
-  text-transform: uppercase;
-  letter-spacing: 3px; /* Mucho aire entre letras */
-  font-weight: 500;
-  color: #ffffff;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.5); /* Sombra suave para leerse sobre cualquier fondo */
-  white-space: nowrap;
-  
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  
-  /* Animación de "Respiración" y slide sutil (Igual que la barra de abajo) */
-  animation: float-pulse 2.5s ease-in-out infinite;
-
-  .icon {
-    font-size: 1rem;
-    opacity: 0.8;
-  }
-}
-
-@keyframes float-pulse {
-  0% { opacity: 0.5; transform: translateX(0); }
-  50% { opacity: 1; transform: translateX(5px); } /* Sutil movimiento a la derecha */
-  100% { opacity: 0.5; transform: translateX(0); }
-}
-
-/* --- TOOLTIP CIRCULAR FRAMER STYLE --- */
-.framer-tooltip-container {
-  pointer-events: none;
-  width: 100px; /* Tamaño del círculo */
-  height: 100px;
   position: relative;
+  /* La variable recibe el color del LocalStorage, si falla usa el verde por defecto */
+  --theme-color: #00ff88;
+}
+
+/* --- CONTENEDOR PRINCIPAL DEL NOMBRE --- */
+/* Le damos max-content para que envuelva exactamente el tamaño de "ROZZ" */
+.hero-name-wrapper {
+  // background-color: red;
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  margin: 0 auto;
+  margin-top: 5vh; /* Ajuste visual para centrar con la navbar arriba */
+}
+
+/* FILA SUPERIOR: (Roles a la izq, "Axl" a la der) */
+.hero-top-row {
+  //  background-color: green;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end; /* Alinea los textos por su base */
+  width: 100%;
+  margin-bottom: -0.2vw; /* 🔥 Truco: Jala la palabra ROZZ hacia arriba para empalmarlos un poco */
+  z-index: 2; /* Para que quede por encima de ROZZ */
+}
+
+/* Texto rotativo */
+.rotating-role-container {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(10px, 1.2vw, 16px);
+  letter-spacing: 0.3em;
+  color: #888888;
+  text-transform: uppercase;
+  padding-bottom: 4vw; /* Lo levanta un poquito respecto a Axl */
+  margin-left: 10px;
+}
+
+/* Nombres Gigantes */
+.first-name {
+  font-family: 'Milanesa Serif', serif;
+  font-size: clamp(6rem, 15vw, 15rem);
+  font-weight: bold;
+  line-height: 0.8;
+  color: #ffffff;
+}
+
+.last-name {
+  font-family: 'Milanesa Serif', serif;
+  font-size: clamp(9rem, 24vw, 24rem); /* ROZZ es más grande/ancho */
+  font-weight: bold;
+  line-height: 0.75;
+  color: #ffffff;
+  display: flex;
+  letter-spacing: -0.02em; /* Aprieta un poco las letras */
+}
+
+/* 🔥 TRUCO PARA EL PUNTO EN LA 'O' */
+/* 🔥 TRUCO PARA EL PUNTO EN LA 'O' (AHORA CON OJO SEGUIDOR) */
+.letter-o {
+  position: relative;
+  display: inline-block;
+}
+
+/* 1. Este wrapper marca el centro exacto de la O */
+.dot-center-wrapper {
+  position: absolute;
+  top: 62%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translate(-50%, -50%);
   display: flex;
   justify-content: center;
   align-items: center;
-
-  /* El SVG que contiene el texto y el círculo punteado */
-  svg {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-    
-    /* El texto curvo */
-    text {
-      font-family: var(--font-body), sans-serif; /* Tu fuente */
-      font-size: 0.3em;
-      font-weight: 300;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      fill: white;
-      text-shadow: 0 0 5px rgba(0,0,0,0.5);
-    }
-
-    /* El círculo punteado (Dashed stroke) */
-    .dashed-ring {
-      fill: none;
-      stroke: rgba(255, 255, 255, 0.4);
-      stroke-width: 0.5;
-      stroke-dasharray: 4, 4; /* El efecto dash que te gustaba */
-    }
-  }
+  pointer-events: none; /* Que no bloquee el mouse */
+  z-index: 10;
 }
 
-.spinning-text {
-  animation: spin 10s linear infinite;
-  transform-origin: center;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.fade-in {
-  opacity: 1;
-  transition: opacity 0.5s ease-in;
-}
-
-.fade-out {
-  opacity: 0;
-  transition: opacity 0.5s ease-out; /* Debe ser menor que el GRACE_TIME */
-}
-
-// Animación de rotación constante
-@keyframes spinSlow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.spinning-text-svg {
-  animation: spinSlow 10s linear infinite;
-  transform-origin: center;
-  will-change: transform; /* Optimización de rendimiento */
-}
-
-/* Opcional: Para asegurar que el texto sea legible */
-.tooltip-text-path {
-  fill: white;
-  font-weight: 700;
-  font-size: 13px; /* Ajustable, el spacing lo compensará */
-  letter-spacing: 2px;
-}
-
-/* --- UI OVERLAYS --- */
-.ui-overlay-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* Deja pasar clicks al 3D */
+/* 2. Este wrapper será el que mueva Framer Motion (x, y) */
+.dot-moving-wrapper {
   display: flex;
-  flex-direction: column;
-  padding: 2rem;
-  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Botón ESC (Arriba Izquierda) */
-.esc-button-wrapper {
-  pointer-events: auto; /* Reactiva clicks para el botón */
+/* 3. El punto per se (Mantiene el pulso de tamaño sin afectar coordenadas) */
+.neon-dot {
+  width: clamp(6px, 1.5vw, 11px);
+  height: clamp(6px, 1.5vw, 11px);
+  background-color: var(--theme-color);
+  border-radius: 50%;
+  box-shadow: 0 0 15px var(--theme-color), 0 0 30px var(--theme-color);
+  animation: pulse-home 2s infinite alternate;
+}
+
+/* Le quitamos el translate al keyframe para evitar conflictos con Framer Motion */
+@keyframes pulse-home {
+  0% { transform: scale(0.9); opacity: 0.8; box-shadow: 0 0 5px var(--theme-color); }
+  100% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 20px var(--theme-color), 0 0 40px var(--theme-color); }
+}
+
+/* --- BOTONES INFERIORES --- */
+.home-actions {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  margin-top: 8vh;
+  z-index: 10;
+}
+
+.primary-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: #ffffff;
+  padding: 15px 35px;
+  border-radius: 50px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(10px, 1vw, 14px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   cursor: pointer;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 10px;
-  opacity: 0.7;
-  transition: opacity 0.3s;
 
   &:hover {
-    opacity: 1;
-  }
-
-  .esc-key {
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 4px;
-    padding: 4px 8px;
-    font-family: monospace;
-    font-size: 12px;
-    color: white;
-    background: rgba(0, 0, 0, 0.2);
-  }
-
-  .esc-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: white;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--theme-color); /* Brillo del borde con el color elegido */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px);
   }
 }
 
-/* --- UI: INSTRUCCIONES DE TEXTO (NIVEL INFERIOR) --- */
-.bottom-instructions {
-  margin-top:25px;
-  padding-top: 25px;
-  border-top: solid 1px rgba(255, 255, 255, 0.2) ;
-  position: relative;
-  width: 200px;
-  /* Lo bajamos un poco más para que sea la base */
-
-  // display: flex;
-  // flex-direction: column;
-  align-items: left;
-  justify-content: left;
+.secondary-btn {
+  background: transparent;
+  border: none;
+  color: #666666;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(8px, 0.8vw, 10px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
   text-align: left;
-  pointer-events: none; /* Crucial: para que no bloquee clics */
-  z-index: -10; /* Nivel bajo de UI */
+  line-height: 1.4;
+  transition: color 0.3s ease;
 
-  h3 {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    color: white;
-    text-transform: uppercase;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  }
-
-  p {
-    margin: 4px 0 0 0;
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.7);
-    letter-spacing: 1px;
-    text-transform: uppercase;
+  &:hover {
+    color: #ffffff;
   }
 }
 
-/* --- 1. FONDO GIGANTE (Detrás del 3D) --- */
-.background-giant-text {
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Centrado perfecto */
-  width: 100%;
-  text-align: center;
-  z-index: -100; /* CRUCIAL: Se va al fondo, detrás del canvas */
-  pointer-events: none;
-  
-  h1 {
-    font-size: 8rem; /* Gigante */
-    line-height: 0.9;
-    font-weight: 200;
-    letter-spacing: 2;
-    margin: 0;
-    text-transform: uppercase;
-    font-family: 'Anton', sans-serif; /* O tu fuente bold preferida */
-    white-space: nowrap; /* Que no se rompa la línea si es posible */
+/* ========================================================
+   🔥 CURSORES PERSONALIZADOS NATIVOS
+======================================================== */
+
+.new-home-container {
+  /* Cursor normal para toda la página de Home */
+  cursor: var(--cursor-normal);
+
+  /* Cuando el usuario presiona el mouse en cualquier lado de la pantalla (CLIC) */
+  &:active {
+    cursor: var(--cursor-click);
   }
 }
 
-//* --- TOOLTIP MINIMALISTA (PUNTITO VERDE) --- */
-.sticker-tooltip-wrapper {
-  /* Usamos transform translate para asegurar centrado perfecto sobre el punto 0,0 */
-  transform: translate3d(-50%, -50%, 0); 
+/* Hover: Cuando el mouse pasa sobre los botones, se pone el cursor con rayitas */
+.new-home-container button,
+.new-home-container a,
+.primary-btn,
+.secondary-btn {
+  cursor: var(--cursor-hover);
+
+  /* Si le dan clic justo encima del botón, se vuelve blanco */
+  &:active {
+    cursor: var(--cursor-click);
+  }
+}
+
+/* ========================================================
+   🔥 SPLASH SCREEN / LOADING OVERLAY SIMPLIFICADO
+======================================================== */
+.home-loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999; 
+  background-color: #000000; /* Fondo negro absoluto y puro */
   display: flex;
-  flex-direction: column; /* Poner el texto ARRIBA o ABAJO del punto, no al lado */
+  justify-content: center;
   align-items: center;
-  gap: 5px;
-  pointer-events: none !important;
-  user-select: none;
+  color: #fff;
+}
+
+.loader-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.loader-logo-container {
+  width: 120px; /* Tamaño de tu logo GIF */
+  height: 120px;
+  margin-bottom: 2rem;
   
-  .green-dot-pulse {
-    width: 8px;
-    height: 8px;
-    background-color: #00ff88;
-    border-radius: 50%;
-    box-shadow: 0 0 10px #00ff88;
-    position: relative;
-    z-index: 10; /* Que el punto esté por encima de la tarjeta si se solapan */
-    
-    &::after {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100%; height: 100%;
-      border-radius: 50%;
-      border: 1px solid #00ff88;
-      animation: pulse-ring 2s infinite;
-    }
-  }
-
-  .sticker-info-card {
-    background: rgba(10, 10, 10, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 6px 10px;
-    border-radius: 6px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    white-space: nowrap;
-    
-    /* Pequeña flechita hacia abajo (opcional) para apuntar al dot */
-    margin-bottom: 2px; 
-
-    .info-label {
-      font-size: 8px;
-      color: #aaa;
-      letter-spacing: 1px;
-      margin-bottom: 2px;
-    }
-
-    .info-date {
-      font-size: 11px;
-      font-weight: 700;
-      color: white;
-      font-family: monospace;
-    }
+  .loading-gif {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 }
 
-@keyframes pulse-ring {
-  0% { width: 100%; height: 100%; opacity: 0.8; }
-  100% { width: 300%; height: 300%; opacity: 0; }
-}
-
-.hint-overlay-container {
-  /* FIX CENTRADO: Usamos fixed para que sea relativo a la ventana, no al div padre */
-  position: fixed; 
-  bottom: 140px; 
-  left: 42%;
-  transform: translateX(-50%);
-  z-index: 90; /* Debajo del menú, encima del 3D */
-  pointer-events: none;
+.loader-user-info {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: max-content; /* Que el ancho sea solo lo que ocupa el texto */
+  gap: 15px;
+  text-align: center;
+}
 
-  /* Estilo base de las etiquetas */
-  .hint-label {
-    margin: 0;
-    font-family: var(--font-body), sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    color: white;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-    background: rgba(0,0,0,0.4); /* Un poco más oscuro para legibilidad */
-    padding: 6px 12px;
-    border-radius: 6px;
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(255,255,255,0.1);
-    white-space: nowrap;
-  }
+/* Efecto Dither para el texto principal */
+.dither-text {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 0;
+  text-transform: uppercase;
+  color: #fff;
+  -webkit-mask-image: radial-gradient(circle, transparent 1px, black 1.5px);
+  mask-image: radial-gradient(circle, transparent 1px, black 1.5px);
+  -webkit-mask-size: 4px 4px;
+  mask-size: 4px 4px;
+  animation: dither-static 0.15s steps(4) infinite;
+}
 
-  .arrow-icon {
-    font-size: 20px;
-    color: white;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-    line-height: 1;
-  }
+.loader-details {
+  font-family: monospace;
+  color: #888;
+  font-size: 14px;
+  letter-spacing: 0.2em; /* Mucho más espaciado para verse elegante */
+  p { margin: 5px 0; }
+}
+
+.loading-bar-container {
+  position: absolute;
+  bottom: 50px;
+  width: 300px;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.1);
   
-  /* Icono de rotación SVG */
-  .rotate-icon-svg {
-    width: 30px;
-    height: 30px;
-    fill: none;
-    stroke: white;
-    stroke-width: 2;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  .loading-bar-fill {
+    height: 100%;
+    background-color: var(--theme-color, #00ff88);
+    box-shadow: 0 0 10px var(--theme-color);
   }
 }
 
+/* Reutilizamos la estática del Dither por si no la tenías en este archivo */
+@keyframes dither-static {
+  0%   { -webkit-mask-position: 0px 0px; opacity: 1; }
+  25%  { -webkit-mask-position: 5px 2px; opacity: 0.8; }
+  50%  { -webkit-mask-position: -2px 20px; opacity: 1; }
+  75%  { -webkit-mask-position: 0px -2px; opacity: 0.9; }
+  100% { -webkit-mask-position: 50px 0px; opacity: 1; }
+}

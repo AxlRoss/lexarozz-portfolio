@@ -63,7 +63,7 @@ const ProjectDetail = () => {
         <nav className="internal-nav">
           <button onClick={() => navigate(-1)} className="back-btn-modern">
             <span className="dot-blink"></span>
-            <span className="txt">VOLVER A PROYECTOS</span>
+            <span className="txt">REGRESAR</span>
           </button>
           <div className="nav-line"></div>
         </nav>

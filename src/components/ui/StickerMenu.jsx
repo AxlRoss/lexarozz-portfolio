@@ -5,7 +5,7 @@ const stickers = [1, 2, 3, 4, 5, 6, 7]; // IDs de los stickers
 const StickerMenu = ({ selectedSticker, onSelect }) => {
   return (
     <div className="sticker-ui-container">
-      <h3>Elige tu sticker:</h3>
+
       
       <div className="sticker-bar">
         {stickers.map((id) => (

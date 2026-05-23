@@ -1,89 +1,104 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Environment, ContactShadows } from '@react-three/drei';
+import { Environment, ContactShadows, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
-import StopSign from './StopSign';
+import HardDrive from './HardDrive'; 
 
-const Rig = ({ locked, zoomTarget }) => {
-  const targetPos = new THREE.Vector3();
+const CameraController = ({ targetPosition, isLocked }) => {
+  const controlsRef = useRef();
+  const vec = new THREE.Vector3();
 
-  useFrame((state) => {
-    // 1. Calculamos el parallax del mouse (state.pointer va de -1 a 1)
-    // Reducimos la fuerza del movimiento cuando hay zoom (para que no sea mareante)
-    const factor = zoomTarget ? 0.6 : 3.0;
-    const mX = state.pointer.x * factor;
-    const mY = state.pointer.y * factor;
+  useFrame((state, delta) => {
+    if (!controlsRef.current) return;
+    const controls = controlsRef.current;
 
-    // PRIORIDAD 1: ZOOM AL STICKER (Fase Completed)
-    if (zoomTarget) {
-      // Sumamos el movimiento del mouse (mX, mY) a la posición del sticker
-      targetPos.set(
-        zoomTarget.x + mX, 
-        zoomTarget.y + mY, 
-        zoomTarget.z + 2.2 // Un poco más cerca
-      );
-      state.camera.position.lerp(targetPos, 0.05);
-      state.camera.lookAt(zoomTarget.x, zoomTarget.y, zoomTarget.z);
-    } 
-    // PRIORIDAD 2: BLOQUEO DE ROTACIÓN
-    else if (locked) {
-      targetPos.set(0, 0, 6);
-      state.camera.position.lerp(targetPos, 0.05);
-      state.camera.lookAt(0, 0, 0);
-    } 
-    // PRIORIDAD 3: PARALLAX NORMAL (Hover y Pasting)
-    else {
-      targetPos.set(mX, mY, 6);
-      state.camera.position.lerp(targetPos, 0.05);
-      state.camera.lookAt(0, 0, 0);
+    // --- FASE 1: BLOQUEADA (ROTANDO/PEGANDO) ---
+    if (isLocked) {
+      controls.target.lerp(targetPosition, 5 * delta);
+      controls.update();
+      return;
+    }
+
+    // --- FASE 2: EXPLORACIÓN ---
+    // Si nos alejamos mucho, regresamos el centro
+    const distance = state.camera.position.distanceTo(controls.target);
+    const ZOOM_THRESHOLD = 4.5; 
+
+    if (distance > ZOOM_THRESHOLD) {
+        vec.set(0, 0, 0);
+        controls.target.lerp(vec, 5 * delta);
+        controls.update();
     }
   });
-  return null;
+
+  return (
+    <OrbitControls 
+      ref={controlsRef}
+      makeDefault 
+      enableDamping={true} 
+      dampingFactor={0.05} 
+      minDistance={2.0} 
+      maxDistance={10}  
+      enablePan={false}
+      enableZoom={true} 
+      enableRotate={!isLocked}
+      zoomToCursor={!isLocked} 
+      
+      // 🔥 CAMBIO 2: LÍMITES POLARES (ESTABILIDAD)
+      // Esto evita que la cámara pase exactamente por encima (0) o por debajo (PI)
+      // del objeto, lo que causa el "flip" o inversión violenta de ejes.
+      // Dejamos un margen pequeñito (0.1 radianes aprox 5 grados).
+      minPolarAngle={0.1} 
+      maxPolarAngle={Math.PI - 0.1}
+    />
+  );
 };
 
-const Experience = ({ selectedStickerId, stickerPhase, setStickerPhase, pasteProgress, onStickerFixed, zoomTarget, onDeselect }) => {
+const Experience = ({ selectedStickerId, stickerPhase, setStickerPhase, pasteProgress, onStickerFixed, onDeselect }) => {
 
-  // --- CORRECCIÓN AQUÍ ---
-  // Solo bloqueamos el movimiento de la cámara estrictamente durante la rotación.
-  // En 'hover' y 'pasting', isLocked será false, permitiendo el parallax.
-  const isLocked = stickerPhase === 'rotating';
+  const [cameraFocusPoint, setCameraFocusPoint] = useState(new THREE.Vector3(0, 0, 0));
+  const isCameraLocked = stickerPhase === 'rotating' || stickerPhase === 'pasting';
 
   return (
     <Canvas
       shadows
-      dpr={[1, 2]} // Para que se vea nítido en pantallas retina
-      camera={{ position: [0, 0, 6], fov: 45 }}
+      dpr={[1, 2]} 
+      camera={{ position: [0, 0, 5], fov: 55 }} 
       style={{ height: '100vh', width: '100vw', background: 'transparent' }}
     >
-      <ambientLight intensity={6.4} color="#ffffff" />
+      <ambientLight intensity={1.5} color="#ffffff" />
+      
+      {/* 🔥 CAMBIO 2: ILUMINACIÓN FRONTAL */}
       <spotLight 
-        position={[-5, 0, 2]} 
-        angle={0.4} 
-        color="#f8f0ff"
-        penumbra={0.5} 
-        intensity={0.5} 
+        // X=0 (Centro), Y=10 (Arriba), Z=10 (Frente a la cámara)
+        position={[0, 10, 10]} 
+        angle={0.5} 
+        penumbra={1} 
+        intensity={3} // Subimos intensidad para que brille bonito
         castShadow 
-        shadow-bias={-0.0001}
       />
-      {/* 3. LUZ DE RELLENO AZULADA (Toque artístico) */}
-      <pointLight position={[-5, 0, 5]} intensity={5.5} color="#ffecfb" />
+      
+      {/* Luz de relleno desde abajo para que no se vea negro por debajo */}
+      <pointLight position={[0, -10, 5]} intensity={1} color="#eefeff" />
 
-      {/* 4. ENTORNO HDR (Warehouse da reflejos metálicos muy buenos) */}
-      <Environment preset="studio" blur={0.7} />
+      <Environment preset="city" blur={0.8} />
 
-      <Rig locked={isLocked} zoomTarget={zoomTarget} />
+      <CameraController 
+        targetPosition={cameraFocusPoint} 
+        isLocked={isCameraLocked}
+      />
 
-      <StopSign 
+      <HardDrive 
         selectedStickerId={selectedStickerId} 
         phase={stickerPhase}
         setPhase={setStickerPhase}
         pasteProgress={pasteProgress}
-        onLockChange={() => {}} 
         onStickerFixed={onStickerFixed}
         onDeselect={onDeselect}
+        setCameraFocusPoint={setCameraFocusPoint}
       />
 
-      <ContactShadows position={[0, -3.5, 0]} opacity={1} scale={15} blur={2} far={4.5} color="#000000" />
+      <ContactShadows position={[0, -1.5, 0]} opacity={0.6} scale={10} blur={2} far={4} />
     </Canvas>
   );
 };

@@ -1,18 +1,45 @@
-import React, { Suspense, useState, useEffect } from 'react';
-import { Canvas } from '@react-three/fiber';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import PortfolioScene from '../components/3d/PortfolioScene'; 
-import MobileWork from './MobileWork';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Work.scss';
-import BrutalistFooter from '../components/ui/BrutalistFooter';
+
+// 🔥 NUESTRA BASE DE DATOS LOCAL
+const DIRECTORIES = [
+  { 
+    id: "video", 
+    title: "VIDEO", 
+    link: "/video", 
+    videoUrl: "/mockups/Video.mp4", 
+    meta: "[01] // MOTION & EDIT" 
+  },
+  { 
+    id: "design", 
+    title: "DESIGN", 
+    link: "/design", 
+    videoUrl: "/mockups/video1.mp4", 
+    meta: "[02] // UI & BRANDING" 
+  },
+  { 
+    id: "animation", 
+    // 🔥 Control total: Rompemos la palabra EXACTAMENTE donde nosotros queremos
+    title: "3D &\nVFX", 
+    link: "/animation", 
+    videoUrl: "/mockups/Animation.mp4", 
+    meta: "[03] // CGI & VFX" 
+  }
+];
 
 const Work = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const navigate = useNavigate();
 
+  // Aseguramos que la Navbar global siempre esté visible en esta pantalla
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    const globalNavbar = document.querySelector('nav') || document.querySelector('.navbar');
+    if (globalNavbar) {
+      globalNavbar.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      globalNavbar.style.opacity = '1'; 
+      globalNavbar.style.pointerEvents = 'auto';
+    }
   }, []);
 
   return (
@@ -20,38 +47,58 @@ const Work = () => {
       className="work-page-container"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 1.5 }}
+      transition={{ duration: 1 }}
+      // Eliminamos el onScroll porque ya no hay footer
     >
-      {/* Fondo de degradado (ahora se quedará fijo en el fondo) */}
       <div className="animated-gradient" />
 
       {/* ==========================================
-          🔥 SECCIÓN 1: HERO (CUBOS 3D / MOBILE)
+          🔥 SECCIÓN ÚNICA: EL ACORDEÓN BRUTALISTA
       ========================================== */}
       <section className="snap-section work-hero-section">
         
-        {/* --- MODO ESCRITORIO (3D) --- */}
-        {!isMobile && (
-          <div className="canvas-container">
-            <Canvas camera={{ position: [0, 0, 8], fov: 35 }} dpr={[1, 2]}>
-              <Suspense fallback={null}>
-                <ambientLight intensity={0.5} />
-                <pointLight position={[10, 10, 10]} intensity={1} />
-                <PortfolioScene />
-              </Suspense>
-            </Canvas>
-          </div>
-        )}
+        <div className="accordion-container">
+          {DIRECTORIES.map((dir) => (
+            <div 
+              key={dir.id} 
+              className="accordion-panel"
+              onClick={() => navigate(dir.link)}
+            >
+              {/* VIDEO DE FONDO */}
+              <div className="panel-bg-wrapper">
+                <video 
+                  src={dir.videoUrl} 
+                  autoPlay loop muted playsInline 
+                  className="panel-video"
+                />
+              </div>
 
-        {/* --- MODO MÓVIL --- */}
-        {isMobile && <MobileWork />}
+              <div className="dither-mask"></div>
+              <div className="vignette-mask"></div>
+
+              {/* CONTENIDO UI */}
+              <div className="panel-content">
+                <div className="panel-meta">{dir.meta}</div>
+                
+                {/* 🔥 Hacemos split al \n para que React respete el salto de línea */}
+                <h1 className="panel-title">
+                  {dir.title.split('\n').map((line, i) => (
+                    <React.Fragment key={i}>
+                      {line}<br/>
+                    </React.Fragment>
+                  ))}
+                </h1>
+                
+                <div className="panel-action">
+                  <span>[ EXPLORE_DIRECTORY ]</span>
+                  <div className="arrow">→</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
 
       </section>
-
-      {/* ==========================================
-          🔥 SECCIÓN 2: FOOTER GLOBAL MAGNÉTICO
-      ========================================== */}
-      <BrutalistFooter />
 
     </motion.div>
   );

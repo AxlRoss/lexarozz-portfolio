@@ -98,7 +98,7 @@ export const VFX_DATA = {
 // =========================================================================
 export const VIDEO_DATA = {
   // El video principal que corre de fondo en el Splash
-  heroVideoUrl: "/videos/entropy.mp4", 
+  heroVideoUrl: "/mockups/Video.mp4", 
   
   // Aquí pones los slugs de los proyectos de Sanity que sean de Motion, Video Edit, etc.
   selectedWork: [
@@ -130,10 +130,12 @@ export const VIDEO_DATA = {
 
   // Las marcas para el carrusel (Solo cambia la ruta por tus logos en public/logos/)
   brands: [
-    { id: 1, name: "NIKE", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg" },
-    { id: 2, name: "ADIDAS", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg" },
-    { id: 3, name: "APPLE", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" },
-    { id: 4, name: "SONY", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/c/ca/Sony_logo.svg" },
-    { id: 5, name: "RED BULL", logoUrl: "https://upload.wikimedia.org/wikipedia/en/f/f5/RedBull_Energy_Drink_logo.svg" }
+    { id: 1, name: "CHARLY", logoUrl: "/brands_logos/Logo_de_Charly.svg" },
+    { id: 2, name: "PAYJOY", logoUrl: "/brands_logos/PAYJOY_Brand.png" },
+    { id: 3, name: "COCA COLA FEMSA", logoUrl: "/brands_logos/coca_Brand.png" },
+    { id: 4, name: "TRUST 360 MX", logoUrl: "/brands_logos/trust360_logo_blue-1024x322.png" },
+    { id: 5, name: "MATTEL", logoUrl: "/brands_logos/Mattel_logo.svg.png" },
+    { id: 6, name: "DICKIES", logoUrl: "/brands_logos/Dickies-Logo-.png" },
+    { id: 7, name: "BANCO AZTECA", logoUrl: "/brands_logos/Banco_Azteca_Logo.png" }
   ]
 };

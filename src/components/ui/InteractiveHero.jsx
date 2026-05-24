@@ -286,8 +286,8 @@ const InteractiveHero = ({ scrollProgress = 0 }) => {
 
         <div className="bottom-info">
           <div className="manifesto-mini">
-            <p className="main-text">"DISEÑA ROMPIENDO LAS REGLAS"</p>
-            <p className="sub-text">Porque </p>
+            {/* <p className="main-text">"DISEÑA ROMPIENDO LAS REGLAS"</p>
+            <p className="sub-text">Porque </p> */}
           </div>
         </div>
 

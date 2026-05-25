@@ -1,31 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom'; // 🔥 1. Agregamos useLocation
 import { client, urlFor } from '../sanity';
 import '../styles/AllWork.scss';
 import BrutalistFooter from '../components/ui/BrutalistFooter';
 
 const AllWork = () => {
   const navigate = useNavigate();
-  
+  const location = useLocation(); // 🔥 2. Activamos el lector de URL
+
   // ==========================================
   // 🔥 ESTADOS DE LA BASE DE DATOS Y UI
   // ==========================================
-  const [projects, setProjects] = useState([]); // Todos los proyectos (Base intacta)
-  const [filteredProjects, setFilteredProjects] = useState([]); // Proyectos mostrados
-  const [availableTags, setAvailableTags] = useState([]); // Etiquetas únicas detectadas
+  const [projects, setProjects] = useState([]); 
+  const [filteredProjects, setFilteredProjects] = useState([]); 
+  const [availableTags, setAvailableTags] = useState([]); 
   const [isLoading, setIsLoading] = useState(true);
 
-  // 🔥 ESTADOS DE FILTROS
-  const [searchTerm, setSearchTerm] = useState("");
+  // ==========================================
+  // 🔥 LECTURA INICIAL DE LA URL
+  // ==========================================
+  // Extraemos lo que venga en "?search=..." de la URL. Si no hay nada, usamos ""
+  const searchParams = new URLSearchParams(location.search);
+  const initialSearch = searchParams.get('search') || "";
+
+  // 🔥 ESTADOS DE FILTROS (Iniciamos searchTerm con lo que leímos de la URL)
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [activeTag, setActiveTag] = useState("ALL");
-  const [sortOrder, setSortOrder] = useState("NEWEST"); // "NEWEST" o "OLDEST"
+  const [sortOrder, setSortOrder] = useState("NEWEST"); 
 
   // ==========================================
   // 🔥 1. FETCH DE TODOS LOS PROYECTOS
   // ==========================================
   useEffect(() => {
-    // Traemos todo lo que tenga un slug definido
     const query = `*[defined(slug.current)]{
       _id,
       title,
@@ -40,7 +47,6 @@ const AllWork = () => {
         setProjects(data);
         setFilteredProjects(data);
         
-        // Extraer todos los tags, aplanarlos en un solo array y quitar duplicados (Set)
         const allTags = data.flatMap(project => project.tags || []);
         const uniqueTags = ["ALL", ...new Set(allTags)];
         setAvailableTags(uniqueTags);
@@ -52,7 +58,7 @@ const AllWork = () => {
         setIsLoading(false);
       });
       
-      window.scrollTo(0, 0); // Al entrar, vamos hasta arriba
+      window.scrollTo(0, 0); 
   }, []);
 
   // ==========================================
@@ -75,7 +81,6 @@ const AllWork = () => {
 
     // C. Ordenamiento por Año
     result.sort((a, b) => {
-      // Usamos || 0 por si algún proyecto no tiene año
       const yearA = parseInt(a.year) || 0;
       const yearB = parseInt(b.year) || 0;
       return sortOrder === "NEWEST" ? yearB - yearA : yearA - yearB;
@@ -162,7 +167,6 @@ const AllWork = () => {
                   onClick={() => navigate(`/project/${proj.slug}`)}
                 >
                   <div className="grid-image-wrapper">
-                    {/* Renderizamos la imagen de Sanity si existe */}
                     {proj.mainImage ? (
                       <img src={urlFor(proj.mainImage).width(800).url()} alt={proj.title} />
                     ) : (

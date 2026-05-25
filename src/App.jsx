@@ -10,6 +10,7 @@ import Design from './pages/Design';
 import Animation from './pages/Animation'; 
 import AllWork from './pages/AllWork';
 import Video from './pages/Video';
+import CV from './pages/CV';
 
 const AppContent = () => {
   const location = useLocation();
@@ -30,6 +31,7 @@ const AppContent = () => {
         <Route path="/animation" element={<Animation />} />
         <Route path="/video" element={<Video />} />
         <Route path="/all" element={<AllWork />} />
+        <Route path="/cv" element={<CV />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/project/:slug" element={<ProjectDetail />} />
       </Routes>

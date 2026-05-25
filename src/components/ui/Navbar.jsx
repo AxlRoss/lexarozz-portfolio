@@ -91,7 +91,8 @@ const Navbar = () => {
         {/* 🔥 MENÚ DE ESCRITORIO */}
         <div className="nav-menus">
           <Link to="/work" className={location.pathname === '/work' ? 'active' : ''}>WORK</Link>
-          <Link to="/all" className={location.pathname === '/all' ? 'active' : ''}>ALL</Link> {/* NUEVO ENLACE */}
+          <Link to="/all" className={location.pathname === '/all' ? 'active' : ''}>ALL</Link> 
+          <Link to="/cv" className={location.pathname === '/cv' ? 'active' : ''}>CV</Link> {/* 🔥 NUEVO ENLACE CV */}
           <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''}>CONTACT</Link>
         </div>
 
@@ -145,7 +146,10 @@ const Navbar = () => {
                 <Link to="/work" className={location.pathname === '/work' ? 'active' : ''}>WORK</Link>
               </motion.div>
               <motion.div variants={linkItemVariants}>
-                <Link to="/all" className={location.pathname === '/all' ? 'active' : ''}>ALL</Link> {/* NUEVO ENLACE MÓVIL */}
+                <Link to="/all" className={location.pathname === '/all' ? 'active' : ''}>ALL</Link> 
+              </motion.div>
+              <motion.div variants={linkItemVariants}>
+                <Link to="/cv" className={location.pathname === '/cv' ? 'active' : ''}>CV</Link> {/* 🔥 NUEVO ENLACE CV MÓVIL */}
               </motion.div>
               <motion.div variants={linkItemVariants}>
                 <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''}>CONTACT</Link>

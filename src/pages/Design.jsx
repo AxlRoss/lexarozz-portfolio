@@ -33,16 +33,20 @@ const Design = () => {
   }, []);
 
   // ==========================================
-  // 🔥 FETCH A SANITY (MAGIA ALEATORIA: DESIGN & SOCIAL MEDIA)
+  // 🔥 FETCH A SANITY (DISEÑO, REDES, PAUTA)
   // ==========================================
   useEffect(() => {
-    const query = `*[_type == "project" && defined(slug.current) && ("Design" in tags || "Social Media" in tags)]{
+    // 🔥 FIX: Consulta GROQ estricta buscando específicamente DISEÑO, REDES o PAUTA.
+    // Ojo: Si un proyecto de Motion Graphics aparece aquí, revisa en Sanity que no tenga el tag de "Redes" por accidente.
+    const query = `*[_type == "project" && defined(slug.current) && (
+      count((tags[]->title)[@ match "DISEÑO" || @ match "PAUTA"]) > 0
+    )]{
       _id,
       title,
       "slug": slug.current,
       mainImage,
       year,
-      tags
+      "tags": tags[]->title // Extraemos el texto del tag referenciado
     }`;
 
     client.fetch(query).then((sanityData) => {
@@ -100,7 +104,6 @@ const Design = () => {
       ========================================== */}
       <section className="snap-section hero-section" style={{ padding: 0 }}>
         
-        {/* 🔥 FIX: Cambiamos <video> por <img> pero mantenemos la clase para heredar el estilo B&N y Cover */}
         <div className="video-background-wrapper">
           <img
             src="/Design_Splash.jpg" 

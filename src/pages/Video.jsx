@@ -15,17 +15,14 @@ const SUBTITLES = [
 const Video = () => {
   const navigate = useNavigate();
   
-  // Estado para el subtítulo rotativo
   const [subIndex, setSubIndex] = useState(0);
-  
-  // Estado para SELECTED WORK (Ahora inicia vacío porque lo llenará Sanity)
   const [selectedList, setSelectedList] = useState([]);
 
   // 1. LÓGICA DE ROTACIÓN DEL SUBTÍTULO
   useEffect(() => {
     const interval = setInterval(() => {
       setSubIndex((prev) => (prev + 1) % SUBTITLES.length);
-    }, 1200); // Cambia cada 1.2 segundos
+    }, 1200); 
     return () => clearInterval(interval);
   }, []);
 
@@ -45,33 +42,32 @@ const Video = () => {
     };
   }, []);
 
-  // 3. FETCH A SANITY (MAGIA ALEATORIA Y AUTOMATIZADA)
+  // 3. FETCH A SANITY (MAGIA ALEATORIA Y AUTOMATIZADA - CORREGIDO PARA RELATIONAL DATA)
   useEffect(() => {
-    // 🔥 Le decimos a Sanity: Trae TODO lo que tenga un slug Y que en sus tags incluya "Motion Graphics" o "2D ANIMATION"
-    const query = `*[_type == "project" && defined(slug.current) && ("Motion Graphics" in tags || "2D ANIMATION" in tags)]{
+    // 🔥 FIX: Como ahora los tags son referencias, usamos la sintaxis de "match" cruzando la referencia.
+    // Buscamos proyectos donde ALGUNO de sus tags referenciados tenga de título "Motion Graphics" o "2D ANIMATION"
+    const query = `*[_type == "project" && defined(slug.current) && (
+      count((tags[]->title)[@ match "Motion Graphics" || @ match "2D ANIMATION"]) > 0
+    )]{
       _id,
       title,
       "slug": slug.current,
       mainImage,
       year,
-      tags
+      "tags": tags[]->title // Extraemos el texto del tag referenciado
     }`;
 
     client.fetch(query).then((sanityData) => {
       
       if (sanityData.length > 0) {
-        // 🔥 EL TRUCO ALEATORIO: Barajamos los resultados usando el algoritmo sort + Math.random
         const shuffledData = [...sanityData].sort(() => 0.5 - Math.random());
-        
-        // 🔥 CORTAMOS A 6: Tomamos solo los primeros 6 resultados de la lista ya barajada
         const top6Projects = shuffledData.slice(0, 6);
 
-        // Mapeamos los datos para que coincidan con la estructura visual de nuestro grid
         const formattedList = top6Projects.map(proj => ({
           _id: proj._id,
           title: proj.title,
           slug: proj.slug,
-          imgUrl: proj.mainImage ? urlFor(proj.mainImage).width(800).url() : "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop", // Fallback por si acaso
+          imgUrl: proj.mainImage ? urlFor(proj.mainImage).width(800).url() : "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
           year: proj.year || "N/A",
           category: (proj.tags && proj.tags.length > 0) ? proj.tags[0] : "VIDEO"
         }));
@@ -101,9 +97,6 @@ const Video = () => {
   return (
     <div className="video-page-container" onScroll={handleScroll}>
       
-      {/* ==========================================
-          SECCIÓN 1: HERO SPLASH (VIDEO)
-      ========================================== */}
       <section className="snap-section hero-section">
         <div className="video-background-wrapper">
           <video
@@ -151,9 +144,6 @@ const Video = () => {
         </div>
       </section>
 
-      {/* ==========================================
-          SECCIÓN 2: MARCAS (CARRUSEL BRUTALISTA)
-      ========================================== */}
       <section className="snap-section brands-section">
         <div className="archive-header brands-header">
           <h2>[ TRUSTED_BY ]</h2>
@@ -172,9 +162,6 @@ const Video = () => {
         </div>
       </section>
 
-      {/* ==========================================
-          SECCIÓN 3: SELECTED WORK (AUTOMATIZADO)
-      ========================================== */}
       <section className="snap-section archive-section">
         <div className="archive-header">
           <h2>SELECTED WORK</h2>
@@ -182,7 +169,6 @@ const Video = () => {
         </div>
 
         <div className="brutalist-grid">
-          {/* Si no hay proyectos con esos tags aún, podemos mostrar un mensaje */}
           {selectedList.length === 0 ? (
             <p style={{ fontFamily: 'monospace', color: '#00ff88', gridColumn: '1 / -1', textAlign: 'center' }}>
               _BUSCANDO REGISTROS...
@@ -208,9 +194,6 @@ const Video = () => {
         </div>
       </section>
 
-      {/* ==========================================
-          SECCIÓN 4: FOOTER GLOBAL
-      ========================================== */}
       <BrutalistFooter />
 
     </div>

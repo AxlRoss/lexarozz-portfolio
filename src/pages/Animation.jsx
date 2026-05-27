@@ -3,19 +3,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Animation.scss';
 import BrutalistFooter from '../components/ui/BrutalistFooter';
-
-// 🔥 1. IMPORTAMOS SANITY
 import { client, urlFor } from '../sanity';
-
-// 🔥 IMPORTAMOS TU BASE DE DATOS CENTRAL
 import { ANIMATION_DATA } from '../data/portfolioData';
 
 const Animation = () => {
   const navigate = useNavigate();
+  // El Hero sigue usando la data manual porque ahí están tus videos masivos
   const [activeProject, setActiveProject] = useState(ANIMATION_DATA.heroProjects[0]);
 
-  // 🔥 2. ESTADO PARA LOS PROYECTOS DE ARCHIVO (Inicia con la data local)
-  const [archiveList, setArchiveList] = useState(ANIMATION_DATA.archiveProjects);
+  // 🔥 FIX: Iniciamos la lista vacía para que Sanity la llene aleatoriamente
+  const [archiveList, setArchiveList] = useState([]);
 
   // ==========================================
   // 🔥 LÓGICA DE OCULTAR/MOSTRAR NAVBAR GLOBAL
@@ -38,47 +35,41 @@ const Animation = () => {
   }, []);
 
   // ==========================================
-  // 🔥 FETCH A SANITY (MAGIA HÍBRIDA)
+  // 🔥 FETCH A SANITY (MAGIA ALEATORIA: 3D, CFX, UE5)
   // ==========================================
   useEffect(() => {
-    // 1. Extraemos los slugs de tu portfolioData para saber qué buscar en Sanity
-    const slugsArray = ANIMATION_DATA.archiveProjects.map(p => `"${p.slug}"`);
-    const slugsString = slugsArray.join(',');
+    // 🔥 FIX: Consulta GROQ que cruza las referencias buscando exclusivamente los tags correctos
+    const query = `*[_type == "project" && defined(slug.current) && (
+      count((tags[]->title)[@ match "3D ANIMATION" || @ match "CFX" || @ match "UE5"]) > 0
+    )]{
+      _id,
+      title,
+      "slug": slug.current,
+      mainImage,
+      year,
+      "tags": tags[]->title 
+    }`;
 
-    if (slugsString) {
-      // 2. Le preguntamos a Sanity solo por esos proyectos específicos
-      const query = `*[slug.current in [${slugsString}]]{
-        title,
-        "slug": slug.current,
-        mainImage,
-        year,
-        tags
-      }`;
+    client.fetch(query).then((sanityData) => {
+      if (sanityData.length > 0) {
+        // Barajamos aleatoriamente todos los proyectos de animación encontrados
+        const shuffledData = [...sanityData].sort(() => 0.5 - Math.random());
+        // Tomamos los primeros 6 para no saturar la página
+        const top6Projects = shuffledData.slice(0, 6);
 
-      client.fetch(query).then((sanityData) => {
-        // 3. Mezclamos tus datos locales con los reales de Sanity
-        const updatedArchive = ANIMATION_DATA.archiveProjects.map(localProj => {
-          const sanityMatch = sanityData.find(s => s.slug === localProj.slug);
+        // Mapeamos los datos a la estructura que requiere nuestro frontend
+        const formattedList = top6Projects.map(proj => ({
+          _id: proj._id,
+          title: proj.title,
+          slug: proj.slug,
+          imgUrl: proj.mainImage ? urlFor(proj.mainImage).width(800).url() : "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
+          year: proj.year || "N/A",
+          category: (proj.tags && proj.tags.length > 0) ? proj.tags[0] : "ANIMATION"
+        }));
 
-          if (sanityMatch) {
-            return {
-              ...localProj,
-              // Si Sanity tiene título, lo usamos; si no, dejamos el local
-              title: sanityMatch.title || localProj.title,
-              // Si Sanity tiene foto, usamos urlFor; si no, dejamos el de unsplash
-              imgUrl: sanityMatch.mainImage ? urlFor(sanityMatch.mainImage).width(800).url() : localProj.imgUrl,
-              // Opcional: Actualizamos año y categoría desde Sanity
-              year: sanityMatch.year || localProj.year,
-              category: (sanityMatch.tags && sanityMatch.tags.length > 0) ? sanityMatch.tags[0] : localProj.category
-            };
-          }
-          return localProj;
-        });
-
-        // 4. Actualizamos el estado con los datos reales
-        setArchiveList(updatedArchive);
-      }).catch(err => console.error("Error conectando con Sanity:", err));
-    }
+        setArchiveList(formattedList);
+      }
+    }).catch(err => console.error("Error conectando con Sanity:", err));
   }, []);
 
   const handleScroll = (e) => {
@@ -168,23 +159,29 @@ const Animation = () => {
         </div>
 
         <div className="brutalist-grid">
-          {/* 🔥 USAMOS EL NUEVO ESTADO CON DATA DE SANITY */}
-          {archiveList.map((proj) => (
-            <div 
-              key={proj._id} 
-              className="grid-item"
-              onClick={() => navigate(`/project/${proj.slug}`)}
-            >
-              <div className="grid-image-wrapper">
-                <img src={proj.imgUrl} alt={proj.title} />
-                <div className="dither-mask"></div>
+          {/* 🔥 FIX: Mensaje de "Buscando Registros" mientras Sanity responde */}
+          {archiveList.length === 0 ? (
+            <p style={{ fontFamily: 'monospace', color: '#00ff88', gridColumn: '1 / -1', textAlign: 'center' }}>
+              _BUSCANDO REGISTROS...
+            </p>
+          ) : (
+            archiveList.map((proj) => (
+              <div 
+                key={proj._id} 
+                className="grid-item"
+                onClick={() => navigate(`/project/${proj.slug}`)}
+              >
+                <div className="grid-image-wrapper">
+                  <img src={proj.imgUrl} alt={proj.title} />
+                  <div className="dither-mask"></div>
+                </div>
+                <div className="grid-info">
+                  <h3>{proj.title}</h3>
+                  <span className="grid-meta">[{proj.category} // {proj.year}]</span>
+                </div>
               </div>
-              <div className="grid-info">
-                <h3>{proj.title}</h3>
-                <span className="grid-meta">[{proj.category} // {proj.year}]</span>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </section>
 

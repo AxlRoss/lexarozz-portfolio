@@ -158,7 +158,7 @@ const CV = () => {
                   <div className="job-clients">
                     Clients include: 
                     <span className="interactive-client" onClick={() => handleClientClick("COMPARTAMOS BANCO")}>COMPARTAMOS BANCO</span>, 
-                    <span className="interactive-client" onClick={() => handleClientClick("GRUPO COCA COLA")}> COCA COLA</span>, 
+                    <span className="interactive-client" onClick={() => handleClientClick("COCA COLA")}> COCA COLA</span>, 
                     <span className="interactive-client" onClick={() => handleClientClick("ACER")}> ACER</span>, 
                     <span className="interactive-client" onClick={() => handleClientClick("MATTEL")}> MATTEL</span>, 
                     <span className="interactive-client" onClick={() => handleClientClick("Ilusion")}> ILLUSION</span>, 

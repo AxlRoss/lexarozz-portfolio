@@ -39,7 +39,7 @@ const AllWork = () => {
       "slug": slug.current,
       mainImage,
       year,
-      tags
+      "tags": tags[]->title
     }`;
 
     client.fetch(query)

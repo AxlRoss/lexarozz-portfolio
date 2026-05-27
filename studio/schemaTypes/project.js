@@ -3,7 +3,9 @@ export default {
   title: 'Proyectos',
   type: 'document',
   fields: [
-    // --- DATOS BÁSICOS ---
+    // ==========================================
+    // --- 1. DATOS BÁSICOS ---
+    // ==========================================
     {
       name: 'title',
       title: 'Título del Proyecto',
@@ -31,7 +33,7 @@ export default {
           { title: 'Selected Work (Detallado, Estilo Behance)', value: 'selected' },
           { title: 'All Work (Simple, solo video/imagen)', value: 'all' },
         ],
-        layout: 'radio' // Aparecerán como botones de opción
+        layout: 'radio' 
       },
       validation: Rule => Rule.required()
     },
@@ -42,62 +44,75 @@ export default {
     },
     {
       name: 'year',
-      title: 'Año',
+      title: 'Año (Para ordenamiento interno)',
       type: 'number',
+      description: 'Escribe solo el número (Ej: 2024 o 2023). El sistema usará esto para ordenar los proyectos de más nuevos a más viejos.'
+    },
+    {
+      name: 'displayDate',
+      title: 'Fecha Visible (Texto libre)',
+      type: 'string',
+      description: 'Esto es lo que leerá el usuario. Ej: "MAYO 2024", "2023 - 2024" o "Q3 2023".'
     },
     {
       name: 'tags',
       title: 'Tags / Categorías',
       type: 'array',
-      description: 'Importante para los filtros (Animation, VFX, Design...)',
-      of: [{ type: 'string' }],
-      // 🔥 AQUÍ ACTUALIZAMOS TU LISTA EXACTA DE ETIQUETAS
-      options: {
-        list: [
-          { title: '3D ANIMATION', value: '3D ANIMATION' },
-          { title: '2D ANIMATION', value: '2D ANIMATION' },
-          { title: 'VFX', value: 'VFX' },
-          { title: 'CFX', value: 'CFX' },
-          { title: 'Design', value: 'Design' },
-          { title: 'Social Media', value: 'Social Media' },
-          { title: 'Motion Graphics', value: 'Motion Graphics' },
-          { title: 'Art direction', value: 'Art direction' },
-          { title: 'Director', value: 'Director' },
-          { title: 'AI prompting', value: 'AI prompting' },
-        ]
-      }
+      description: 'Añade categorías existentes o crea una nueva escribiendo y seleccionando "Create new..."',
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'category' }] // 🔥 Esto conecta los proyectos con tu nuevo archivo
+        }
+      ]
     },
     {
       name: 'credits',
-      title: 'Créditos',
+      title: 'Data / Créditos',
       type: 'text',
       rows: 3,
-      description: 'Nombres, roles, agradecimientos...'
+      description: 'Roles, agradecimientos, premios...'
     },
 
-    // --- MEDIA PRINCIPAL (Para la Card y el Hover) ---
+    // ==========================================
+    // --- 2. MEDIA PRINCIPAL ---
+    // ==========================================
     {
       name: 'mainImage',
       title: 'Imagen de Portada (Thumbnail)',
       type: 'image',
-      options: { hotspot: true }, // Permite elegir qué parte de la foto recortar
+      description: 'La imagen obligatoria que sale en los grids del portafolio.',
+      options: { hotspot: true }, 
       validation: Rule => Rule.required()
     },
     {
-      name: 'hoverVideo',
-      title: 'Video Hover (Loop)',
+      name: 'nativeVideo',
+      title: 'Video Principal Nativo (Opcional)',
       type: 'file',
-      description: 'Sube un video corto (MP4/WebM) que se reproducirá al pasar el mouse por encima.',
+      description: 'Sube un video MP4 directo a Sanity (Max recomendado 30MB) para reproducción nativa y rápida.',
+      options: {
+        accept: 'video/mp4,video/webm'
+      }
+    },
+    {
+      name: 'mainCarousel',
+      title: 'Carrusel de Imágenes Principal (Opcional)',
+      type: 'array',
+      description: 'Si prefieres un carrusel de imágenes al inicio de la página en lugar/además de un video.',
+      of: [{ type: 'image', options: { hotspot: true } }],
+      options: { layout: 'grid' }
     },
 
-    // --- CONTENIDO ESTILO BEHANCE ---
+    // ==========================================
+    // --- 3. CONTENIDO ESTILO BEHANCE ---
+    // ==========================================
     {
       name: 'content',
       title: 'Contenido del Proyecto (Storytelling)',
       type: 'array',
-      description: 'Aquí armas tu proyecto. Agrega bloques de texto, imágenes o videos en el orden que quieras.',
+      description: 'Aquí armas tu proyecto. Agrega bloques de texto, imágenes, videos embed o carruseles.',
       of: [
-        // 1. Bloque de Texto Rico
+        // A. Bloque de Texto Rico
         {
           type: 'block', 
           styles: [
@@ -107,40 +122,39 @@ export default {
             {title: 'Quote', value: 'blockquote'},
           ]
         },
-        // 2. Bloque de Imagen Full
+        // B. Bloque de Imagen Full
         {
           type: 'image',
           options: { hotspot: true },
           fields: [
-            {
-              name: 'caption',
-              type: 'string',
-              title: 'Pie de foto (Opcional)',
-            },
-            {
-              name: 'alt',
-              type: 'string',
-              title: 'Texto alternativo (Para SEO)',
-            }
+            { name: 'caption', type: 'string', title: 'Pie de foto (Opcional)' },
+            { name: 'alt', type: 'string', title: 'Texto alternativo (Para SEO)' }
           ]
         },
-        // 3. Bloque de Video (Embed de YouTube/Vimeo)
+        // C. Bloque de Video (Embed de YouTube/Vimeo)
         {
             title: 'Video Embed (YouTube/Vimeo)',
             name: 'videoEmbed',
             type: 'object',
             fields: [
-                {
-                    name: 'url',
-                    type: 'url',
-                    title: 'URL del Video'
-                },
-                {
-                    name: 'caption',
-                    type: 'string',
-                    title: 'Descripción del video'
-                }
+                { name: 'url', type: 'url', title: 'URL del Video' },
+                { name: 'caption', type: 'string', title: 'Descripción del video' }
             ]
+        },
+        // 🔥 D. NUEVO: Carrusel Integrado en el texto
+        {
+          title: 'Carrusel de Imágenes (Inline)',
+          name: 'inlineCarousel',
+          type: 'object',
+          fields: [
+            {
+              name: 'images',
+              title: 'Sube las imágenes de este carrusel',
+              type: 'array',
+              of: [{ type: 'image', options: { hotspot: true } }],
+              options: { layout: 'grid' }
+            }
+          ]
         }
       ]
     }
